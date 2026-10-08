@@ -491,20 +491,26 @@ class HomeScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Row(
-                children: [
-                  Icon(Icons.compare_arrows_rounded, color: AppTheme.primary, size: 20),
-                  SizedBox(width: 8),
-                  Text(
-                    'What Changed? (vs Personal Baseline)',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      color: AppTheme.textPrimary,
+              const Expanded(
+                child: Row(
+                  children: [
+                    Icon(Icons.compare_arrows_rounded, color: AppTheme.primary, size: 20),
+                    SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'What Changed? (vs Baseline)',
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                          color: AppTheme.textPrimary,
+                        ),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
+              const SizedBox(width: 8),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
@@ -563,16 +569,17 @@ class HomeScreen extends StatelessWidget {
   }) {
     final deltaColor = isWorsening ? AppTheme.critical : AppTheme.stable;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 6),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(metric, style: const TextStyle(fontSize: 11.5, color: AppTheme.textSecondary, fontWeight: FontWeight.w600)),
+          Text(metric, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary, fontWeight: FontWeight.w600)),
           const SizedBox(height: 4),
-          Row(
+          Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 3,
             children: [
-              Text(recentValue, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: AppTheme.textPrimary)),
-              const SizedBox(width: 4),
+              Text(recentValue, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: AppTheme.textPrimary)),
               Text(
                 delta,
                 style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: deltaColor),
@@ -580,7 +587,7 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 2),
-          Text('Base: $baselineValue', style: const TextStyle(fontSize: 10, color: AppTheme.textMuted)),
+          Text('Base: $baselineValue', maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 10, color: AppTheme.textMuted)),
         ],
       ),
     );
@@ -659,7 +666,10 @@ class HomeScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(title, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppTheme.textSecondary)),
+              Expanded(
+                child: Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppTheme.textSecondary)),
+              ),
+              const SizedBox(width: 4),
               Icon(icon, size: 16, color: iconColor),
             ],
           ),

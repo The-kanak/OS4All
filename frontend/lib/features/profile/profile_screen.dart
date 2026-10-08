@@ -432,13 +432,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(height: 20),
 
                 // Privacy & Consents Link
-                ListTile(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-                  leading: const Icon(Icons.privacy_tip_outlined, color: AppTheme.textSecondary),
-                  title: const Text('Patient Data Sovereignty & Consents', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
-                  trailing: const Icon(Icons.chevron_right, size: 20),
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const ConsentScreen()),
+                Material(
+                  color: Colors.transparent,
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+                    leading: const Icon(Icons.privacy_tip_outlined, color: AppTheme.textSecondary),
+                    title: const Text('Patient Data Sovereignty & Consents', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                    trailing: const Icon(Icons.chevron_right, size: 20),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const ConsentScreen()),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 10),
