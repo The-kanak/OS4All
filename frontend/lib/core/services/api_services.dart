@@ -90,7 +90,7 @@ class UserService {
       '/users/consent',
       body: {
         'consentType': consentType,
-        'isGranted': isGranted,
+        'granted': isGranted,
       },
     );
     return UserConsentModel.fromJson(data as Map<String, dynamic>);
@@ -138,15 +138,14 @@ class HealthService {
   }) async {
     await _client.post(
       '/health/observations',
-      body: [
-        {
-          'observationType': observationType,
-          'valueNumeric': valueNumeric,
-          'unit': unit,
-          'timestamp': DateTime.now().toUtc().toIso8601String(),
-          'source': source ?? 'Manual Entry',
-        }
-      ],
+      body: {
+        'type': 'VITAL',
+        'vitalName': observationType,
+        'valueNumeric': valueNumeric,
+        'unit': unit,
+        'timestamp': DateTime.now().toUtc().toIso8601String(),
+        'source': source ?? 'Manual Entry',
+      },
     );
   }
 }
