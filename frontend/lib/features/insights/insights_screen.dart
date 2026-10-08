@@ -134,38 +134,43 @@ class _InsightsScreenState extends State<InsightsScreen> {
                 'Log daily temperature and hydration to assist longitudinal trend calibration.',
               ];
 
-        return Scaffold(
-          backgroundColor: AppTheme.background,
-          appBar: AppBar(
-            title: const Text('AI Health Intelligence', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18)),
-            actions: [
-              Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: TextButton.icon(
-                  style: TextButton.styleFrom(
-                    backgroundColor: AppTheme.primary.withValues(alpha: 0.12),
-                    foregroundColor: AppTheme.primary,
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        return SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 36),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Top Title & Trace Action
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Expanded(
+                    child: Text(
+                      'AI Health Intelligence',
+                      style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18, color: AppTheme.textPrimary),
+                    ),
                   ),
-                  icon: const Icon(Icons.account_tree_rounded, size: 15),
-                  label: const Text('TRACE PIPELINE', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
-                  onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const IntelligenceTraceScreen()),
+                  const SizedBox(width: 8),
+                  TextButton.icon(
+                    style: TextButton.styleFrom(
+                      backgroundColor: AppTheme.primary.withValues(alpha: 0.12),
+                      foregroundColor: AppTheme.primary,
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    ),
+                    icon: const Icon(Icons.account_tree_rounded, size: 15),
+                    label: const Text('TRACE', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const IntelligenceTraceScreen()),
+                    ),
                   ),
-                ),
-              ),
-            ],
-          ),
-          body: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 36),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (isDemo) ...[
-                  const DemoDataNoticeBanner(label: 'DEMO DATA — NOT A REAL PATIENT'),
-                  const SizedBox(height: 12),
                 ],
+              ),
+              const SizedBox(height: 12),
+
+              if (isDemo) ...[
+                const DemoDataNoticeBanner(label: 'DEMO DATA — NOT A REAL PATIENT'),
+                const SizedBox(height: 12),
+              ],
 
                 // Provider Badge
                 Container(
@@ -375,11 +380,10 @@ class _InsightsScreenState extends State<InsightsScreen> {
                 }),
               ],
             ),
-          ),
-        );
-      },
-    );
-  }
+          );
+        },
+      );
+    }
 
   Widget _buildTierCard({
     required String tierNumber,

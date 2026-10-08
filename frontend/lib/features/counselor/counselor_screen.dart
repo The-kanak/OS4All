@@ -175,19 +175,22 @@ class _CounselorScreenState extends State<CounselorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppTheme.background,
-      appBar: AppBar(
-        title: const Row(
-          children: [
-            Icon(Icons.support_agent_rounded, color: AppTheme.primary, size: 24),
-            SizedBox(width: 8),
-            Text('AI Health Counselor', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18)),
-          ],
+    return Column(
+      children: [
+        Container(
+          color: AppTheme.surface,
+          padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
+          child: const Row(
+            children: [
+              Icon(Icons.support_agent_rounded, color: AppTheme.primary, size: 22),
+              SizedBox(width: 8),
+              Text(
+                'AI Health Counselor',
+                style: TextStyle(fontWeight: FontWeight.w800, fontSize: 17, color: AppTheme.textPrimary),
+              ),
+            ],
+          ),
         ),
-      ),
-      body: Column(
-        children: [
           // Emergency Alert Banner
           if (_emergencyAlertActive)
             Container(
@@ -292,9 +295,8 @@ class _CounselorScreenState extends State<CounselorScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
+      );
+    }
 
   Widget _buildMessageBubble(_ChatMessageItem msg, bool isUser) {
     if (isUser) {

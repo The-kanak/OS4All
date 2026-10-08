@@ -47,54 +47,70 @@ class HealthScreenState extends State<HealthScreen> with SingleTickerProviderSta
       builder: (context, _) {
         final appState = AppStateManager.instance;
 
-        return Scaffold(
-          backgroundColor: AppTheme.background,
-          appBar: AppBar(
-            title: const Text(
-              'Health Intelligence Hub',
-              style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
-            ),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.add_chart_rounded, color: AppTheme.primary),
-                tooltip: 'Record Vital',
-                onPressed: () => AddVitalObservationDialog.show(context),
+        return Column(
+          children: [
+            Container(
+              color: AppTheme.surface,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 8, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Expanded(
+                          child: Text(
+                            'Health Intelligence Hub',
+                            style: TextStyle(fontWeight: FontWeight.w800, fontSize: 17, color: AppTheme.textPrimary),
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.add_chart_rounded, color: AppTheme.primary, size: 20),
+                          tooltip: 'Record Vital',
+                          onPressed: () => AddVitalObservationDialog.show(context),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.refresh_rounded, color: AppTheme.textSecondary, size: 20),
+                          tooltip: 'Refresh',
+                          onPressed: () {
+                            appState.refreshHealthStatus();
+                            appState.refreshBaseline();
+                            appState.refreshTimeline();
+                            appState.refreshReports();
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  TabBar(
+                    controller: _tabController,
+                    indicatorColor: AppTheme.primary,
+                    indicatorWeight: 3,
+                    labelColor: AppTheme.primary,
+                    unselectedLabelColor: AppTheme.textSecondary,
+                    labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+                    tabs: const [
+                      Tab(text: 'Signals', icon: Icon(Icons.show_chart_rounded, size: 18)),
+                      Tab(text: 'Baseline', icon: Icon(Icons.tune_rounded, size: 18)),
+                      Tab(text: 'Timeline', icon: Icon(Icons.timeline_rounded, size: 18)),
+                      Tab(text: 'Reports', icon: Icon(Icons.description_outlined, size: 18)),
+                    ],
+                  ),
+                ],
               ),
-              IconButton(
-                icon: const Icon(Icons.refresh_rounded, color: AppTheme.textSecondary),
-                tooltip: 'Refresh',
-                onPressed: () {
-                  appState.refreshHealthStatus();
-                  appState.refreshBaseline();
-                  appState.refreshTimeline();
-                  appState.refreshReports();
-                },
-              ),
-            ],
-            bottom: TabBar(
-              controller: _tabController,
-              indicatorColor: AppTheme.primary,
-              indicatorWeight: 3,
-              labelColor: AppTheme.primary,
-              unselectedLabelColor: AppTheme.textSecondary,
-              labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
-              tabs: const [
-                Tab(text: 'Signals', icon: Icon(Icons.show_chart_rounded, size: 18)),
-                Tab(text: 'Baseline', icon: Icon(Icons.tune_rounded, size: 18)),
-                Tab(text: 'Timeline', icon: Icon(Icons.timeline_rounded, size: 18)),
-                Tab(text: 'Reports', icon: Icon(Icons.description_outlined, size: 18)),
-              ],
             ),
-          ),
-          body: TabBarView(
-            controller: _tabController,
-            children: [
-              _buildSignalsTab(context, appState),
-              _buildBaselineTab(context, appState),
-              _buildTimelineTab(context, appState),
-              _buildReportsTab(context, appState),
-            ],
-          ),
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildSignalsTab(context, appState),
+                  _buildBaselineTab(context, appState),
+                  _buildTimelineTab(context, appState),
+                  _buildReportsTab(context, appState),
+                ],
+              ),
+            ),
+          ],
         );
       },
     );
@@ -238,10 +254,15 @@ class HealthScreenState extends State<HealthScreen> with SingleTickerProviderSta
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                metricName,
-                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppTheme.textPrimary),
+              Expanded(
+                child: Text(
+                  metricName,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppTheme.textPrimary),
+                ),
               ),
+              const SizedBox(width: 8),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
@@ -451,10 +472,15 @@ class HealthScreenState extends State<HealthScreen> with SingleTickerProviderSta
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                metric,
-                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppTheme.textPrimary),
+              Expanded(
+                child: Text(
+                  metric,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppTheme.textPrimary),
+                ),
               ),
+              const SizedBox(width: 8),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
@@ -685,19 +711,10 @@ class HealthScreenState extends State<HealthScreen> with SingleTickerProviderSta
     final reports = appState.labReports;
     final isDemo = appState.isDemoMode;
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: AppTheme.primary,
-        foregroundColor: Colors.white,
-        icon: const Icon(Icons.upload_file_rounded),
-        label: const Text('Upload PDF (OCR)', style: TextStyle(fontWeight: FontWeight.bold)),
-        onPressed: () => Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => const ReportUploadScreen()),
-        ),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
+    return Stack(
+      children: [
+        SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -767,6 +784,20 @@ class HealthScreenState extends State<HealthScreen> with SingleTickerProviderSta
           ],
         ),
       ),
+      Positioned(
+          right: 16,
+          bottom: 16,
+          child: FloatingActionButton.extended(
+            backgroundColor: AppTheme.primary,
+            foregroundColor: Colors.white,
+            icon: const Icon(Icons.upload_file_rounded),
+            label: const Text('Upload PDF (OCR)', style: TextStyle(fontWeight: FontWeight.bold)),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const ReportUploadScreen()),
+            ),
+          ),
+        ),
+      ],
     );
   }
 

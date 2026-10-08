@@ -600,7 +600,7 @@ class HomeScreen extends StatelessWidget {
       crossAxisCount: 2,
       crossAxisSpacing: 12,
       mainAxisSpacing: 12,
-      childAspectRatio: 1.45,
+      childAspectRatio: 1.15,
       children: [
         _buildSignalCard(
           title: 'Resting HR',

@@ -160,27 +160,61 @@ class AppShellState extends State<AppShell> {
                   ),
                 ),
               ),
-              const SizedBox(width: 6),
+              const SizedBox(width: 4),
 
-              // Launch Demo / Trace action buttons
-              IconButton(
-                tooltip: 'Run 10-Step Demo',
-                icon: const Icon(Icons.rocket_launch_rounded, color: AppTheme.primary, size: 20),
-                onPressed: () => LaunchDemoModal.show(context),
-              ),
-              IconButton(
-                tooltip: 'Intelligence Trace',
-                icon: const Icon(Icons.account_tree_rounded, color: AppTheme.secondary, size: 20),
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const IntelligenceTraceScreen()),
-                ),
-              ),
-              IconButton(
-                tooltip: 'Alerts',
-                icon: const Icon(Icons.notifications_none_rounded, color: AppTheme.textPrimary, size: 20),
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const AlertsScreen()),
-                ),
+              // Quick Tools & Actions Overflow Menu
+              PopupMenuButton<String>(
+                icon: const Icon(Icons.more_vert_rounded, color: AppTheme.textPrimary, size: 22),
+                tooltip: 'More Actions',
+                onSelected: (value) {
+                  switch (value) {
+                    case 'demo':
+                      LaunchDemoModal.show(context);
+                      break;
+                    case 'trace':
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const IntelligenceTraceScreen()),
+                      );
+                      break;
+                    case 'alerts':
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const AlertsScreen()),
+                      );
+                      break;
+                  }
+                },
+                itemBuilder: (ctx) => [
+                  const PopupMenuItem(
+                    value: 'demo',
+                    child: Row(
+                      children: [
+                        Icon(Icons.rocket_launch_rounded, color: AppTheme.primary, size: 18),
+                        SizedBox(width: 10),
+                        Text('Run 10-Step Demo', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                      ],
+                    ),
+                  ),
+                  const PopupMenuItem(
+                    value: 'trace',
+                    child: Row(
+                      children: [
+                        Icon(Icons.account_tree_rounded, color: AppTheme.secondary, size: 18),
+                        SizedBox(width: 10),
+                        Text('Intelligence Trace', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                      ],
+                    ),
+                  ),
+                  const PopupMenuItem(
+                    value: 'alerts',
+                    child: Row(
+                      children: [
+                        Icon(Icons.notifications_none_rounded, color: AppTheme.textPrimary, size: 18),
+                        SizedBox(width: 10),
+                        Text('Patient Alerts', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                      ],
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(width: 4),
             ],
