@@ -6,9 +6,9 @@ class AppConfig {
   static const String appName = 'OS4All';
   static const String tagline = 'Your health, understood earlier.';
 
-  // Default endpoints aligned with Spring Boot (server.port=8080)
-  static const String androidEmulatorBaseUrl = 'http://10.0.2.2:8080/api/v1';
-  static const String webLocalBaseUrl = 'http://localhost:8080/api/v1';
+  // Default endpoints aligned with Spring Boot (server.port=8085 due to port 8080 being occupied by PEMHTTPD)
+  static const String androidEmulatorBaseUrl = 'http://10.0.2.2:8085/api/v1';
+  static const String webLocalBaseUrl = 'http://localhost:8085/api/v1';
 
   // Configurable at runtime if user overrides in Settings
   static String? _customBaseUrl;
