@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import '../../core/models/models.dart';
 import '../../core/theme/app_theme.dart';
+import '../../shared/state/app_state_manager.dart';
 import '../../shared/widgets/healthcare_widgets.dart';
-import '../dashboard/dashboard_screen.dart';
+import '../shell/app_shell.dart';
 
 class ConsentScreen extends StatefulWidget {
   const ConsentScreen({super.key});
@@ -16,17 +18,42 @@ class _ConsentScreenState extends State<ConsentScreen> {
   bool _evidenceSearchGranted = true;
   bool _isLoading = false;
 
-  void _submitConsent() {
+  @override
+  void initState() {
+    super.initState();
+    _loadExistingConsents();
+  }
+
+  void _loadExistingConsents() {
+    final consent = AppStateManager.instance.consent;
+    if (consent != null) {
+      setState(() {
+        _dataStorageGranted = consent.dataStorageConsent;
+        _aiInferenceGranted = consent.aiProcessingConsent;
+        _evidenceSearchGranted = consent.evidenceSearchConsent;
+      });
+    }
+  }
+
+  Future<void> _submitConsent() async {
     setState(() => _isLoading = true);
-    Future.delayed(const Duration(milliseconds: 600), () {
-      if (mounted) {
-        setState(() => _isLoading = false);
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => const DashboardScreen()),
-          (route) => false,
-        );
-      }
-    });
+
+    final appState = AppStateManager.instance;
+    await appState.submitConsent(UserConsentModel(
+      dataStorageConsent: _dataStorageGranted,
+      aiProcessingConsent: _aiInferenceGranted,
+      evidenceSearchConsent: _evidenceSearchGranted,
+      grantedAt: DateTime.now().toIso8601String(),
+      revokedAt: null,
+    ));
+
+    if (mounted) {
+      setState(() => _isLoading = false);
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const AppShell()),
+        (route) => false,
+      );
+    }
   }
 
   @override
@@ -85,18 +112,18 @@ class _ConsentScreenState extends State<ConsentScreen> {
               Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: AppTheme.cyan.withValues(alpha: 0.08),
+                  color: AppTheme.primary.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppTheme.cyan.withValues(alpha: 0.25)),
+                  border: Border.all(color: AppTheme.primary.withValues(alpha: 0.25)),
                 ),
                 child: const Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.lock_clock_outlined, color: AppTheme.cyan, size: 22),
+                    Icon(Icons.lock_clock_outlined, color: AppTheme.primary, size: 22),
                     SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        'All consent updates are logged to tamper-evident SHA-256 audit trails. You may revoke consent at any time in Settings.',
+                        'All consent updates are logged to tamper-evident SHA-256 audit trails. You may revoke consent at any time in Profile & Settings.',
                         style: TextStyle(color: AppTheme.textSecondary, fontSize: 13, height: 1.4),
                       ),
                     ),
@@ -109,7 +136,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
                 child: ElevatedButton(
                   onPressed: _isLoading ? null : _submitConsent,
                   child: _isLoading
-                      ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.black, strokeWidth: 2.5))
+                      ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5))
                       : const Text('Save Preferences & Continue'),
                 ),
               ),
@@ -142,10 +169,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
         const SizedBox(width: 12),
         Switch(
           value: value,
-          activeThumbColor: AppTheme.cyan,
-          activeTrackColor: AppTheme.cyan.withValues(alpha: 0.4),
-          inactiveThumbColor: AppTheme.textMuted,
-          inactiveTrackColor: AppTheme.surfaceLight,
+          activeThumbColor: AppTheme.primary,
           onChanged: onChanged,
         ),
       ],

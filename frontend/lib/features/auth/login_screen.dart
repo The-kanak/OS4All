@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import '../../core/network/app_config.dart';
 import '../../core/theme/app_theme.dart';
-import '../dashboard/dashboard_screen.dart';
+import '../../shared/state/app_state_manager.dart';
+import '../shell/app_shell.dart';
 import 'registration_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -15,18 +17,48 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController(text: 'SecurePass123!');
   bool _obscurePassword = true;
   bool _isLoading = false;
+  String? _errorMessage;
 
-  void _handleLogin() {
-    setState(() => _isLoading = true);
-    Future.delayed(const Duration(milliseconds: 700), () {
-      if (mounted) {
+  Future<void> _handleLogin() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      setState(() => _errorMessage = 'Please enter email and password');
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    final appState = AppStateManager.instance;
+    final success = await appState.login(email, password);
+
+    if (mounted) {
+      if (success) {
         setState(() => _isLoading = false);
         Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => const DashboardScreen()),
+          MaterialPageRoute(builder: (_) => const AppShell()),
           (route) => false,
         );
+      } else {
+        setState(() {
+          _isLoading = false;
+          _errorMessage = appState.errorMessage ?? 'Authentication failed. Please verify credentials or backend availability.';
+        });
       }
-    });
+    }
+  }
+
+  void _handleEnterDemoMode() {
+    final appState = AppStateManager.instance;
+    appState.setDemoMode();
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (_) => const AppShell()),
+      (route) => false,
+    );
   }
 
   @override
@@ -40,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
               const Text(
                 'Welcome Back',
                 style: TextStyle(
@@ -50,12 +82,36 @@ class _LoginScreenState extends State<LoginScreen> {
                   letterSpacing: -0.5,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               const Text(
-                'Access your personal health baselines and early trend insights.',
-                style: TextStyle(color: AppTheme.textSecondary, fontSize: 15),
+                'Access your personal health baselines and longitudinal trend intelligence.',
+                style: TextStyle(color: AppTheme.textSecondary, fontSize: 14),
               ),
-              const SizedBox(height: 36),
+              const SizedBox(height: 28),
+
+              // Backend connection status banner
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                  color: AppTheme.surfaceElevated,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: AppTheme.border),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.dns_outlined, size: 16, color: AppTheme.textSecondary),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Backend: ${AppConfig.apiBaseUrl}',
+                        style: const TextStyle(fontSize: 11.5, color: AppTheme.textSecondary),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+
               TextField(
                 controller: _emailController,
                 decoration: const InputDecoration(
@@ -64,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 keyboardType: TextInputType.emailAddress,
               ),
-              const SizedBox(height: 18),
+              const SizedBox(height: 16),
               TextField(
                 controller: _passwordController,
                 obscureText: _obscurePassword,
@@ -80,7 +136,22 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 28),
+              if (_errorMessage != null) ...[
+                const SizedBox(height: 12),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: AppTheme.critical.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: AppTheme.critical.withValues(alpha: 0.3)),
+                  ),
+                  child: Text(
+                    _errorMessage!,
+                    style: const TextStyle(color: AppTheme.critical, fontSize: 12),
+                  ),
+                ),
+              ],
+              const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -89,9 +160,22 @@ class _LoginScreenState extends State<LoginScreen> {
                       ? const SizedBox(
                           width: 20,
                           height: 20,
-                          child: CircularProgressIndicator(color: Colors.black, strokeWidth: 2.5),
+                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
                         )
-                      : const Text('Sign In'),
+                      : const Text('Sign In with Real Account'),
+                ),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: _handleEnterDemoMode,
+                  icon: const Icon(Icons.science_rounded, size: 18),
+                  label: const Text('Explore in Demo Mode (Judging)'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppTheme.warning,
+                    side: BorderSide(color: AppTheme.warning.withValues(alpha: 0.5)),
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -102,7 +186,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       MaterialPageRoute(builder: (_) => const RegistrationScreen()),
                     );
                   },
-                  child: const Text("Don't have an account? Register", style: TextStyle(color: AppTheme.cyan)),
+                  child: const Text('Don\'t have an account? Sign Up'),
                 ),
               ),
             ],

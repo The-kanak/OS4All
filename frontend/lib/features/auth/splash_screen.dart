@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/network/app_config.dart';
 import '../onboarding/onboarding_screen.dart';
-import '../dashboard/dashboard_screen.dart';
+import '../shell/app_shell.dart';
 
 class SplashScreen extends StatefulWidget {
   final bool isAuthenticated;
@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       if (mounted) {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (_) => widget.isAuthenticated ? const DashboardScreen() : const OnboardingScreen(),
+            builder: (_) => widget.isAuthenticated ? const AppShell() : const OnboardingScreen(),
           ),
         );
       }
