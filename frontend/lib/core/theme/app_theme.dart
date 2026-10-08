@@ -16,15 +16,15 @@ class AppTheme {
   static const Color cardBorder = Color(0xFFE2E8F0);       // Clean slate border
 
   // Accents & Telemetry States
-  static const Color primary = Color(0xFF1E60FF);          // Vibrant Royal/Medical Blue
-  static const Color secondary = Color(0xFF0EA5E9);        // Electric Sky Blue
+  static const Color primary = Color(0xFF0D9488);          // OS4All Calming Medical Teal
+  static const Color secondary = Color(0xFF6366F1);        // Complementary Indigo
   static const Color stable = Color(0xFF10B981);           // Medical Emerald Green (Normal)
-  static const Color attention = Color(0xFF1E60FF);        // Royal Blue (#1E60FF)
+  static const Color attention = Color(0xFFF59E0B);        // Warm Amber
   static const Color critical = Color(0xFFEF4444);         // Coral Crimson (Alert)
   static const Color success = Color(0xFF10B981);          // Green
   static const Color warning = Color(0xFFF59E0B);          // Amber
   static const Color danger = Color(0xFFEF4444);           // Red
-  static const Color info = Color(0xFF0EA5E9);             // Sky blue
+  static const Color info = Color(0xFF0D9488);             // Teal
 
   // Typography Tokens
   static const Color textPrimary = Color(0xFF0F172A);      // Deep Slate Charcoal

@@ -264,9 +264,9 @@ class _InsightsScreenState extends State<InsightsScreen> {
 
                 // 3-Tier Structure Cards
                 _buildTierCard(
-                  tierNumber: 'TIER 1',
-                  tierTitle: 'What OS4All Observed',
-                  tierSubtitle: 'Objective empirical signals and statistical deviations',
+                  tierNumber: 'STEP 1',
+                  tierTitle: 'What We Noticed',
+                  tierSubtitle: 'Empirical signals departing from your personal baseline',
                   icon: Icons.checklist_rtl_rounded,
                   accentColor: AppTheme.primary,
                   items: observations,
@@ -274,19 +274,19 @@ class _InsightsScreenState extends State<InsightsScreen> {
                 const SizedBox(height: 16),
 
                 _buildTierCard(
-                  tierNumber: 'TIER 2',
+                  tierNumber: 'STEP 2',
                   tierTitle: 'Why It Matters',
-                  tierSubtitle: 'Physiological hypotheses (Non-diagnostic context)',
-                  icon: Icons.biotech_rounded,
+                  tierSubtitle: 'Physiological context and potential causes',
+                  icon: Icons.lightbulb_outline_rounded,
                   accentColor: const Color(0xFF6366F1),
                   items: hypotheses,
                 ),
                 const SizedBox(height: 16),
 
                 _buildTierCard(
-                  tierNumber: 'TIER 3',
+                  tierNumber: 'STEP 3',
                   tierTitle: 'What You Can Do',
-                  tierSubtitle: 'Actionable, non-prescriptive lifestyle and recovery steps',
+                  tierSubtitle: 'Suggested steps and recovery habits to consider',
                   icon: Icons.task_alt_rounded,
                   accentColor: AppTheme.success,
                   items: recommendations,

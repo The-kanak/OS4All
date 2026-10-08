@@ -164,40 +164,43 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
         return SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 36),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Top Title & Sign Out Action
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 720),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Expanded(
-                    child: Text(
-                      'Profile & Settings',
-                      style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18, color: AppTheme.textPrimary),
-                    ),
+                  // Top Title & Sign Out Action
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Expanded(
+                        child: Text(
+                          'Profile & Settings',
+                          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18, color: AppTheme.textPrimary),
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.logout_rounded, color: AppTheme.critical, size: 20),
+                        tooltip: 'Sign Out',
+                        onPressed: () async {
+                          await appState.logout();
+                          if (context.mounted) {
+                            Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(builder: (_) => const LoginScreen()),
+                              (r) => false,
+                            );
+                          }
+                        },
+                      ),
+                    ],
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.logout_rounded, color: AppTheme.critical, size: 20),
-                    tooltip: 'Sign Out',
-                    onPressed: () async {
-                      await appState.logout();
-                      if (context.mounted) {
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(builder: (_) => const LoginScreen()),
-                          (r) => false,
-                        );
-                      }
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
+                  const SizedBox(height: 10),
 
-              if (isDemo) ...[
-                const DemoDataNoticeBanner(label: 'DEMO DATA — NOT A REAL PATIENT'),
-                const SizedBox(height: 12),
-              ],
+                  if (isDemo) ...[
+                    const DemoDataNoticeBanner(label: 'DEMO DATA — NOT A REAL PATIENT'),
+                    const SizedBox(height: 12),
+                  ],
 
                 // User Info Header Card
                 Container(
@@ -474,12 +477,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 16),
               ],
+              ),
             ),
-          );
-        },
-      );
-    }
+          ),
+        );
+      },
+    );
+  }
 
   Widget _buildProfileRow(String label, String value) {
     return Padding(

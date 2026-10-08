@@ -61,10 +61,10 @@ class _CounselorScreenState extends State<CounselorScreen> {
   ];
 
   final List<String> _suggestedPrompts = [
-    'Explain my resting HR trend',
-    'Why did my status shift to Drift?',
-    'What do my recent lab results show?',
-    'How does sleep debt affect HRV?',
+    'Why did my health trend change?',
+    'Explain my latest report',
+    'What should I monitor?',
+    'How does sleep affect my baseline?',
   ];
 
   void _scrollToBottom() {
@@ -179,41 +179,90 @@ class _CounselorScreenState extends State<CounselorScreen> {
       children: [
         Container(
           color: AppTheme.surface,
-          padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
           child: const Row(
             children: [
               Icon(Icons.support_agent_rounded, color: AppTheme.primary, size: 22),
-              SizedBox(width: 8),
-              Text(
-                'AI Health Counselor',
-                style: TextStyle(fontWeight: FontWeight.w800, fontSize: 17, color: AppTheme.textPrimary),
+              SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'How can OS4All help?',
+                      style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16.5, color: AppTheme.textPrimary),
+                    ),
+                    SizedBox(height: 1),
+                    Text(
+                      'Ask questions about your health patterns, reports, or trends',
+                      style: TextStyle(fontSize: 12, color: AppTheme.textSecondary),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
         ),
-          // Emergency Alert Banner
-          if (_emergencyAlertActive)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              color: AppTheme.critical,
-              child: Row(
-                children: [
-                  const Icon(Icons.warning_rounded, color: Colors.white, size: 24),
-                  const SizedBox(width: 12),
-                  const Expanded(
-                    child: Text(
-                      'EMERGENCY ALERT: Potential acute medical event. If you are experiencing chest pain, severe shortness of breath, or numbness, call 911 or 112 immediately.',
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12.5),
+        // Emergency Alert Banner
+        if (_emergencyAlertActive)
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            color: const Color(0xFFFEF2F2),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.warning_rounded, color: AppTheme.critical, size: 22),
+                    const SizedBox(width: 8),
+                    const Expanded(
+                      child: Text(
+                        'Immediate attention may be needed',
+                        style: TextStyle(color: AppTheme.critical, fontWeight: FontWeight.w900, fontSize: 14),
+                      ),
                     ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white, size: 18),
-                    onPressed: () => setState(() => _emergencyAlertActive = false),
-                  ),
-                ],
-              ),
+                    IconButton(
+                      icon: const Icon(Icons.close, color: AppTheme.critical, size: 18),
+                      onPressed: () => setState(() => _emergencyAlertActive = false),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                const Text(
+                  'Your message contains symptoms that may require urgent medical attention.',
+                  style: TextStyle(color: AppTheme.textPrimary, fontSize: 12.5, fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(height: 10),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: () {},
+                      icon: const Icon(Icons.phone, size: 15),
+                      label: const Text('Call Emergency (112 / 911)'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.critical,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                        textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                      ),
+                    ),
+                    OutlinedButton(
+                      onPressed: () {},
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppTheme.textPrimary,
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                        textStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+                      ),
+                      child: const Text('Seek professional care'),
+                    ),
+                  ],
+                ),
+              ],
             ),
+          ),
 
           // Chat Messages List
           Expanded(

@@ -52,7 +52,6 @@ class _ReportUploadScreenState extends State<ReportUploadScreen> {
       _errorMessage = null;
     });
 
-    // Valid minimal PDF header and synthetic text representation
     const samplePdfContent = '''
 %PDF-1.4
 1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj
@@ -91,7 +90,7 @@ startxref
   Future<void> _uploadBytes(Uint8List bytes, String filename) async {
     setState(() {
       _isProcessing = true;
-      _statusMessage = 'Uploading $filename to Apache PDFBox extraction engine...';
+      _statusMessage = 'Reading document and extracting biomarkers...';
     });
 
     final appState = AppStateManager.instance;
@@ -105,13 +104,13 @@ startxref
           _statusMessage = null;
         });
       } else {
-        // Deterministic fallback for offline / mock testing
+        // Deterministic fallback for offline / demo presentation
         setState(() {
           _isProcessing = false;
           _extractedReport = LabReportModel(
             id: 'mock-report-uuid-01',
-            reportTitle: 'Diagnostic Blood Panel',
-            laboratoryName: 'Clinical Pathology Lab',
+            reportTitle: 'Comprehensive Blood Panel',
+            laboratoryName: 'Clinical Pathology Laboratory',
             collectionDate: DateTime.now().toIso8601String(),
             fileName: filename,
             results: [
@@ -169,7 +168,7 @@ startxref
 
     setState(() {
       _isProcessing = true;
-      _statusMessage = 'Confirming and ingesting biomarkers into personal health timeline...';
+      _statusMessage = 'Saving markers into your personal health record...';
     });
 
     final appState = AppStateManager.instance;
@@ -184,8 +183,8 @@ startxref
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Lab report confirmed and ingested into your health timeline!'),
-          backgroundColor: AppTheme.success,
+          content: Text('Lab markers confirmed and added to your health records.'),
+          backgroundColor: AppTheme.stable,
         ),
       );
     }
@@ -196,292 +195,374 @@ startxref
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
-        title: const Text('Zero-Trust Document OCR', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 17)),
+        title: const Text('Upload Health Report', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18)),
+        elevation: 0,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(18),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Educational Notice
-            Container(
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: AppTheme.primary.withValues(alpha: 0.06),
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: AppTheme.primary.withValues(alpha: 0.2)),
-              ),
-              child: const Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(Icons.shield_outlined, color: AppTheme.primary, size: 20),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      'Zero-Trust Ingestion: Upload medical PDFs for automatic Apache PDFBox biomarker parsing. All extracted lab values undergo safety bounds checking and require your review before committing to your timeline.',
-                      style: TextStyle(fontSize: 12, color: AppTheme.textPrimary, height: 1.45),
-                    ),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 720),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Calm, Trustworthy Ingestion Callout
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: AppTheme.primary.withValues(alpha: 0.05),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: AppTheme.primary.withValues(alpha: 0.2)),
                   ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 18),
-
-            // Honest Format Disclaimer
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color: AppTheme.surfaceElevated,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: AppTheme.border),
-              ),
-              child: const Row(
-                children: [
-                  Icon(Icons.info_outline, size: 16, color: AppTheme.textSecondary),
-                  SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'Supported: PDF documents. (Image OCR scanner is currently in development)',
-                      style: TextStyle(fontSize: 11.5, color: AppTheme.textSecondary),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            if (_isProcessing) ...[
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(32),
-                decoration: BoxDecoration(
-                  color: AppTheme.surface,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppTheme.border),
-                ),
-                child: Column(
-                  children: [
-                    const CircularProgressIndicator(color: AppTheme.primary),
-                    const SizedBox(height: 18),
-                    Text(
-                      _statusMessage ?? 'Processing Document...',
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14, color: AppTheme.textPrimary),
-                    ),
-                  ],
-                ),
-              ),
-            ] else if (_extractedReport == null) ...[
-              // Upload Selection Box
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(28),
-                decoration: BoxDecoration(
-                  color: AppTheme.surface,
-                  borderRadius: BorderRadius.circular(18),
-                  border: Border.all(color: AppTheme.border),
-                  boxShadow: AppTheme.cardShadow,
-                ),
-                child: Column(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: AppTheme.primary.withValues(alpha: 0.1),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(Icons.picture_as_pdf_rounded, color: AppTheme.primary, size: 40),
-                    ),
-                    const SizedBox(height: 16),
-                    const Text(
-                      'Select Medical PDF Report',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: AppTheme.textPrimary),
-                    ),
-                    const SizedBox(height: 6),
-                    const Text(
-                      'Select a lab report or clinical panel from your local storage',
-                      style: TextStyle(fontSize: 12.5, color: AppTheme.textSecondary),
-                    ),
-                    const SizedBox(height: 22),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton.icon(
-                          onPressed: _pickAndUploadPdf,
-                          icon: const Icon(Icons.folder_open_rounded, size: 18),
-                          label: const Text('Browse Device PDF'),
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-                          ),
+                  child: const Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(Icons.verified_user_outlined, color: AppTheme.primary, size: 20),
+                      SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          'Upload medical lab reports in PDF format. OS4All carefully extracts key health markers so you can review and verify each value before it becomes part of your health baseline.',
+                          style: TextStyle(fontSize: 12.5, color: AppTheme.textPrimary, height: 1.45),
                         ),
-                        const SizedBox(width: 12),
-                        OutlinedButton.icon(
-                          onPressed: _uploadSamplePdf,
-                          icon: const Icon(Icons.science_rounded, size: 18),
-                          label: const Text('Use Sample PDF'),
-                          style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                          ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 14),
+
+                // Supported Format Label
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: AppTheme.surfaceElevated,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: AppTheme.border),
+                  ),
+                  child: const Row(
+                    children: [
+                      Icon(Icons.info_outline, size: 16, color: AppTheme.textMuted),
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'Supported format: PDF documents. (Mobile photo capture is in development)',
+                          style: TextStyle(fontSize: 11.5, color: AppTheme.textSecondary),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                if (_isProcessing) ...[
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 24),
+                    decoration: BoxDecoration(
+                      color: AppTheme.surface,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: AppTheme.border),
+                    ),
+                    child: Column(
+                      children: [
+                        const CircularProgressIndicator(color: AppTheme.primary),
+                        const SizedBox(height: 20),
+                        Text(
+                          _statusMessage ?? 'Processing document...',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: AppTheme.textPrimary),
+                        ),
+                        const SizedBox(height: 6),
+                        const Text(
+                          'Extracting analytes, reference ranges, and test values',
+                          style: TextStyle(fontSize: 12, color: AppTheme.textMuted),
                         ),
                       ],
                     ),
-                  ],
-                ),
-              ),
-              if (_errorMessage != null) ...[
-                const SizedBox(height: 14),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: AppTheme.critical.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AppTheme.critical.withValues(alpha: 0.3)),
                   ),
-                  child: Text(
-                    _errorMessage!,
-                    style: const TextStyle(color: AppTheme.critical, fontSize: 12),
-                  ),
-                ),
-              ],
-            ] else ...[
-              // Extracted Biomarkers Review Table
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(18),
-                decoration: BoxDecoration(
-                  color: AppTheme.surface,
-                  borderRadius: BorderRadius.circular(18),
-                  border: Border.all(color: AppTheme.border),
-                  boxShadow: AppTheme.cardShadow,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                ] else if (_extractedReport == null) ...[
+                  // Upload Selection Card
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(32),
+                    decoration: BoxDecoration(
+                      color: AppTheme.surface,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: AppTheme.border),
+                    ),
+                    child: Column(
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        Container(
+                          padding: const EdgeInsets.all(18),
+                          decoration: BoxDecoration(
+                            color: AppTheme.primary.withValues(alpha: 0.08),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.picture_as_pdf_rounded, color: AppTheme.primary, size: 36),
+                        ),
+                        const SizedBox(height: 18),
+                        const Text(
+                          'Select Medical Report',
+                          style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: AppTheme.textPrimary),
+                        ),
+                        const SizedBox(height: 6),
+                        const Text(
+                          'Choose a lab report or clinical blood panel from your device',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 13, color: AppTheme.textSecondary),
+                        ),
+                        const SizedBox(height: 24),
+                        Wrap(
+                          spacing: 12,
+                          runSpacing: 10,
+                          alignment: WrapAlignment.center,
                           children: [
-                            const Text(
-                              'Extracted Biomarkers Review',
-                              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800, color: AppTheme.textPrimary),
+                            ElevatedButton.icon(
+                              onPressed: _pickAndUploadPdf,
+                              icon: const Icon(Icons.folder_open_rounded, size: 18),
+                              label: const Text('Browse Device PDF'),
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
+                              ),
                             ),
-                            const SizedBox(height: 2),
-                            Text(
-                              _extractedReport!.fileName,
-                              style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary),
+                            OutlinedButton.icon(
+                              onPressed: _uploadSamplePdf,
+                              icon: const Icon(Icons.science_outlined, size: 18),
+                              label: const Text('Use Sample PDF'),
+                              style: OutlinedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+                              ),
                             ),
                           ],
                         ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: _isConfirmed ? AppTheme.success.withValues(alpha: 0.12) : AppTheme.warning.withValues(alpha: 0.12),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            _isConfirmed ? 'CONFIRMED' : 'NEEDS CONFIRMATION',
-                            style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w800,
-                              color: _isConfirmed ? AppTheme.success : AppTheme.warning,
-                            ),
-                          ),
-                        ),
                       ],
                     ),
-                    const Divider(height: 24, color: AppTheme.border),
-                    const Text(
-                      'Please verify the extracted analytes and numerical values below before committing to your baseline engine:',
-                      style: TextStyle(fontSize: 12.5, color: AppTheme.textSecondary),
-                    ),
+                  ),
+                  if (_errorMessage != null) ...[
                     const SizedBox(height: 14),
-                    ..._extractedReport!.results.map((result) {
-                      final isHigh = result.flag.toUpperCase() == 'HIGH';
-                      final flagColor = isHigh ? AppTheme.critical : AppTheme.stable;
-                      final confPct = (result.confidence * 100).toInt();
-
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 10),
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: AppTheme.surfaceElevated,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: AppTheme.border),
-                        ),
-                        child: Row(
+                    Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: AppTheme.critical.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: AppTheme.critical.withValues(alpha: 0.25)),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.error_outline, size: 18, color: AppTheme.critical),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              _errorMessage!,
+                              style: const TextStyle(color: AppTheme.critical, fontSize: 12.5),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ] else ...[
+                  // Extracted Markers Review
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: AppTheme.surface,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: AppTheme.border),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    result.testName,
-                                    style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13.5, color: AppTheme.textPrimary),
+                                  const Text(
+                                    'Extracted Health Markers',
+                                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: AppTheme.textPrimary),
                                   ),
-                                  const SizedBox(height: 2),
+                                  const SizedBox(height: 3),
                                   Text(
-                                    'Ref: ${result.referenceRange} • Conf: $confPct%',
-                                    style: const TextStyle(fontSize: 11, color: AppTheme.textMuted),
+                                    '${_extractedReport!.results.length} results found in ${_extractedReport!.fileName}',
+                                    style: const TextStyle(fontSize: 12.5, color: AppTheme.textSecondary),
                                   ),
                                 ],
                               ),
                             ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  '${result.value} ${result.unit}',
-                                  style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w800, color: AppTheme.textPrimary),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                              decoration: BoxDecoration(
+                                color: _isConfirmed ? AppTheme.stable.withValues(alpha: 0.12) : AppTheme.attention.withValues(alpha: 0.12),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                _isConfirmed ? 'CONFIRMED' : 'READY FOR REVIEW',
+                                style: TextStyle(
+                                  fontSize: 10.5,
+                                  fontWeight: FontWeight.w700,
+                                  color: _isConfirmed ? AppTheme.stable : AppTheme.attention,
                                 ),
-                                const SizedBox(height: 2),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                  decoration: BoxDecoration(
-                                    color: flagColor.withValues(alpha: 0.12),
-                                    borderRadius: BorderRadius.circular(6),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Divider(height: 26, color: AppTheme.border),
+                        const Text(
+                          'Review each extracted marker and its range before confirming:',
+                          style: TextStyle(fontSize: 12.5, color: AppTheme.textSecondary),
+                        ),
+                        const SizedBox(height: 14),
+
+                        // List of Extracted Biomarkers
+                        ..._extractedReport!.results.map((result) {
+                          final isOutOfRange = result.reviewRequired || result.flag.toUpperCase() == 'HIGH';
+                          final statusColor = isOutOfRange ? AppTheme.attention : AppTheme.stable;
+                          final statusLabel = isOutOfRange ? 'Elevated' : 'Normal';
+                          final isHighConf = result.confidence >= 0.90;
+
+                          return Container(
+                            margin: const EdgeInsets.only(bottom: 10),
+                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                            decoration: BoxDecoration(
+                              color: AppTheme.surfaceElevated,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: AppTheme.border),
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        result.testName,
+                                        style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: AppTheme.textPrimary),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            'Ref: ${result.referenceRange} ${result.unit}',
+                                            style: const TextStyle(fontSize: 11.5, color: AppTheme.textMuted),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                            decoration: BoxDecoration(
+                                              color: isHighConf ? AppTheme.primary.withValues(alpha: 0.1) : AppTheme.attention.withValues(alpha: 0.1),
+                                              borderRadius: BorderRadius.circular(4),
+                                            ),
+                                            child: Text(
+                                              isHighConf ? 'High confidence' : 'Review suggested',
+                                              style: TextStyle(
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.w600,
+                                                color: isHighConf ? AppTheme.primary : AppTheme.attention,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      '${result.value} ${result.unit}',
+                                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppTheme.textPrimary),
+                                    ),
+                                    const SizedBox(height: 3),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                                      decoration: BoxDecoration(
+                                        color: statusColor.withValues(alpha: 0.12),
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: Text(
+                                        statusLabel,
+                                        style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: statusColor),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+                        const SizedBox(height: 18),
+
+                        if (!_isConfirmed) ...[
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton.icon(
+                              onPressed: _confirmReport,
+                              icon: const Icon(Icons.check_circle_outline_rounded, size: 18),
+                              label: const Text('Confirm & Save to Health Records'),
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(vertical: 14),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          SizedBox(
+                            width: double.infinity,
+                            child: TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  _extractedReport = null;
+                                  _errorMessage = null;
+                                });
+                              },
+                              child: const Text('Choose Another File', style: TextStyle(color: AppTheme.textSecondary, fontSize: 13)),
+                            ),
+                          ),
+                        ] else ...[
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: AppTheme.stable.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: AppTheme.stable.withValues(alpha: 0.25)),
+                            ),
+                            child: const Row(
+                              children: [
+                                Icon(Icons.check_circle, color: AppTheme.stable, size: 18),
+                                SizedBox(width: 10),
+                                Expanded(
                                   child: Text(
-                                    result.flag,
-                                    style: TextStyle(fontSize: 9.5, fontWeight: FontWeight.w800, color: flagColor),
+                                    'Report confirmed and integrated into your health timeline.',
+                                    style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600, color: AppTheme.textPrimary),
                                   ),
                                 ),
                               ],
                             ),
-                          ],
-                        ),
-                      );
-                    }),
-                    const SizedBox(height: 16),
-                    if (!_isConfirmed)
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton.icon(
-                          onPressed: _confirmReport,
-                          icon: const Icon(Icons.check_circle_outline_rounded),
-                          label: const Text('Confirm & Ingest Biomarkers'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppTheme.primary,
-                            padding: const EdgeInsets.symmetric(vertical: 14),
                           ),
-                        ),
-                      )
-                    else
-                      SizedBox(
-                        width: double.infinity,
-                        child: OutlinedButton.icon(
-                          onPressed: () => Navigator.of(context).pop(),
-                          icon: const Icon(Icons.arrow_back),
-                          label: const Text('Return to Lab Vault'),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ],
-          ],
+                          const SizedBox(height: 14),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton.icon(
+                              onPressed: () => Navigator.of(context).pop(),
+                              icon: const Icon(Icons.arrow_back, size: 18),
+                              label: const Text('Done • Return'),
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(vertical: 13),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ],
+                const SizedBox(height: 32),
+              ],
+            ),
+          ),
         ),
       ),
     );

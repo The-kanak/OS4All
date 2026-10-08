@@ -64,7 +64,7 @@ class _LabsScreenState extends State<LabsScreen> with SingleTickerProviderStateM
         backgroundColor: AppTheme.primary,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add_a_photo_outlined),
-        label: const Text('Upload Report (OCR)', style: TextStyle(fontWeight: FontWeight.w700)),
+        label: const Text('Upload Report', style: TextStyle(fontWeight: FontWeight.w700)),
         onPressed: () => Navigator.of(context).push(
           MaterialPageRoute(builder: (_) => const ReportUploadScreen()),
         ),

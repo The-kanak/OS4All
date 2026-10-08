@@ -179,30 +179,36 @@ class HealthScreenState extends State<HealthScreen> with SingleTickerProviderSta
                 metricName: 'Resting Heart Rate',
                 value: isDemo ? '64' : '61',
                 unit: 'bpm',
-                status: isDemo ? 'ELEVATED (+4 bpm)' : 'NORMAL',
+                status: isDemo ? 'ELEVATED' : 'NORMAL',
                 statusColor: isDemo ? AppTheme.warning : AppTheme.stable,
+                trend: isDemo ? '↑ 4 bpm' : '→ Stable',
+                relationToUsual: isDemo ? 'Slightly above your usual range' : 'Within your usual range',
                 description: 'Basal autonomic indicator measured during resting sleep and morning inactivity.',
-                baseline: 'Personal Mean: 60 ± 2.5 bpm',
+                baseline: 'Usual Range: 55.1 – 64.9 bpm',
               ),
               const SizedBox(height: 12),
               _buildSignalDetailCard(
                 metricName: 'Heart Rate Variability (HRV)',
                 value: isDemo ? '44' : '54',
                 unit: 'ms',
-                status: isDemo ? 'DECREASED (-11 ms)' : 'NORMAL',
+                status: isDemo ? 'DECREASED' : 'NORMAL',
                 statusColor: isDemo ? AppTheme.warning : AppTheme.stable,
-                description: 'Parasympathetic autonomic tone. Sustained drops reflect physiologic strain or recovery debt.',
-                baseline: 'Personal Mean: 55 ± 4.0 ms',
+                trend: isDemo ? '↓ 11 ms' : '→ Stable',
+                relationToUsual: isDemo ? 'Below your usual recovery tone' : 'Within your usual range',
+                description: 'Parasympathetic autonomic tone. Sustained drops reflect physiologic strain.',
+                baseline: 'Usual Range: 47.2 – 62.8 ms',
               ),
               const SizedBox(height: 12),
               _buildSignalDetailCard(
                 metricName: 'Sleep Duration',
                 value: isDemo ? '6.1' : '7.8',
                 unit: 'hours',
-                status: isDemo ? 'SHORTFALL (-1.9 hrs)' : 'NORMAL',
+                status: isDemo ? 'SHORTFALL' : 'NORMAL',
                 statusColor: isDemo ? AppTheme.warning : AppTheme.stable,
+                trend: isDemo ? '↓ 1.9 hrs' : '→ Stable',
+                relationToUsual: isDemo ? 'Shorter than your usual sleep envelope' : 'Within your usual range',
                 description: 'Total nightly restorative rest calculated from longitudinal sleep tracking.',
-                baseline: 'Personal Mean: 8.0 ± 0.6 hrs',
+                baseline: 'Usual Range: 6.8 – 9.2 hrs',
               ),
               const SizedBox(height: 12),
               _buildSignalDetailCard(
@@ -211,8 +217,10 @@ class HealthScreenState extends State<HealthScreen> with SingleTickerProviderSta
                 unit: '%',
                 status: 'STABLE',
                 statusColor: AppTheme.stable,
+                trend: '→ Stable',
+                relationToUsual: 'Within your usual range',
                 description: 'Peripheral arterial oxygen saturation during rest.',
-                baseline: 'Personal Mean: 98.0 ± 0.8%',
+                baseline: 'Usual Range: 96.4 – 99.6%',
               ),
               const SizedBox(height: 12),
               _buildSignalDetailCard(
@@ -221,8 +229,10 @@ class HealthScreenState extends State<HealthScreen> with SingleTickerProviderSta
                 unit: '°C',
                 status: 'STABLE',
                 statusColor: AppTheme.stable,
+                trend: '→ Stable',
+                relationToUsual: 'Within your usual range',
                 description: 'Basal core temperature baseline.',
-                baseline: 'Personal Mean: 36.7 ± 0.2°C',
+                baseline: 'Usual Range: 36.5 – 37.1°C',
               ),
             ],
           ],
@@ -237,6 +247,8 @@ class HealthScreenState extends State<HealthScreen> with SingleTickerProviderSta
     required String unit,
     required String status,
     required Color statusColor,
+    required String trend,
+    required String relationToUsual,
     required String description,
     required String baseline,
   }) {
@@ -290,9 +302,26 @@ class HealthScreenState extends State<HealthScreen> with SingleTickerProviderSta
                 unit,
                 style: const TextStyle(fontSize: 13, color: AppTheme.textMuted, fontWeight: FontWeight.w600),
               ),
+              const Spacer(),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: AppTheme.surfaceElevated,
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  trend,
+                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: statusColor),
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 8),
+          Text(
+            relationToUsual,
+            style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600, color: statusColor),
+          ),
+          const SizedBox(height: 4),
           Text(
             description,
             style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary, height: 1.4),
@@ -300,11 +329,13 @@ class HealthScreenState extends State<HealthScreen> with SingleTickerProviderSta
           const Divider(height: 18, color: AppTheme.border),
           Row(
             children: [
-              const Icon(Icons.straighten_rounded, size: 14, color: AppTheme.primary),
+              const Icon(Icons.tune_rounded, size: 14, color: AppTheme.primary),
               const SizedBox(width: 6),
-              Text(
-                baseline,
-                style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w600, color: AppTheme.textSecondary),
+              Expanded(
+                child: Text(
+                  baseline,
+                  style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w500, color: AppTheme.textSecondary),
+                ),
               ),
             ],
           ),
@@ -322,142 +353,143 @@ class HealthScreenState extends State<HealthScreen> with SingleTickerProviderSta
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (isDemo) ...[
-            const DemoDataNoticeBanner(label: 'DEMO DATA — NOT A REAL PATIENT'),
-            const SizedBox(height: 12),
-          ],
-          // Educational Hero Box
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: AppTheme.primary.withValues(alpha: 0.05),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: AppTheme.primary.withValues(alpha: 0.2)),
-            ),
-            child: const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 720),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (isDemo) ...[
+                const DemoDataNoticeBanner(label: 'DEMO DATA — NOT A REAL PATIENT'),
+                const SizedBox(height: 12),
+              ],
+              // Educational Hero Box
+              Container(
+                padding: const EdgeInsets.all(18),
+                decoration: BoxDecoration(
+                  color: AppTheme.primary.withValues(alpha: 0.05),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: AppTheme.primary.withValues(alpha: 0.2)),
+                ),
+                child: const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.psychology_alt_rounded, color: AppTheme.primary, size: 20),
-                    SizedBox(width: 8),
                     Text(
-                      'Core Mathematical Principle',
-                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppTheme.primary),
+                      'This is YOUR normal.',
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w800,
+                        color: AppTheme.textPrimary,
+                        letterSpacing: -0.3,
+                      ),
+                    ),
+                    SizedBox(height: 6),
+                    Text(
+                      'OS4All compares recent patterns with your own historical patterns, not just generic population averages. When recent signals move outside your personal range, we help you understand what changed.',
+                      style: TextStyle(fontSize: 13, color: AppTheme.textSecondary, height: 1.45),
                     ),
                   ],
                 ),
-                SizedBox(height: 6),
-                Text(
-                  '"Normal for the population is not necessarily normal for the individual."',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w800,
-                    color: AppTheme.textPrimary,
-                    fontStyle: FontStyle.italic,
+              ),
+              const SizedBox(height: 20),
+
+              // Calibration Status Banner (in Live Mode if observations < 14)
+              if (!isDemo && baselines.isEmpty)
+                Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: AppTheme.warning.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppTheme.warning.withValues(alpha: 0.3)),
+                  ),
+                  child: const Row(
+                    children: [
+                      Icon(Icons.hourglass_top_rounded, color: AppTheme.warning, size: 20),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          'We are still learning your normal pattern. Record daily vitals to build your personal baseline.',
+                          style: TextStyle(fontSize: 12, color: AppTheme.textPrimary, fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                SizedBox(height: 8),
-                Text(
-                  'OS4All calibrates individualized statistical envelopes (Mean μ ± 1.96σ, representing a 95% confidence interval). Signals departing beyond this envelope for multiple consecutive days trigger early trend alerts before population thresholds are crossed.',
-                  style: TextStyle(fontSize: 12.5, color: AppTheme.textSecondary, height: 1.45),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 20),
 
-          // Calibration Status Banner (in Live Mode if observations < 14)
-          if (!isDemo && baselines.isEmpty)
-            Container(
-              margin: const EdgeInsets.only(bottom: 16),
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: AppTheme.warning.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppTheme.warning.withValues(alpha: 0.3)),
+              const Text(
+                'Your Calibrated Ranges',
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800, color: AppTheme.textPrimary),
               ),
-              child: const Row(
-                children: [
-                  Icon(Icons.hourglass_top_rounded, color: AppTheme.warning, size: 20),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      'Baseline Calibration in Progress: Establishing statistical confidence requires at least 14 days of observations. Add daily vitals to progress calibration.',
-                      style: TextStyle(fontSize: 12, color: AppTheme.textPrimary, fontWeight: FontWeight.w500),
-                    ),
-                  ),
-                ],
+              const SizedBox(height: 12),
+
+              _buildBaselineEnvelopeCard(
+                metric: 'Resting Heart Rate',
+                usualRangeText: '55.1 – 64.9 bpm',
+                recentValueText: isDemo ? '64.0 bpm' : '61.0 bpm',
+                recentRelativePosition: isDemo ? 0.88 : 0.60,
+                isDeparted: isDemo,
+                mean: '60.0 bpm',
+                stdDev: '2.5 bpm',
+                zScore: isDemo ? '+1.60 σ' : '+0.40 σ',
+                sampleCount: 45,
               ),
-            ),
-
-          const Text(
-            'Calibrated Metric Baselines',
-            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800, color: AppTheme.textPrimary),
+              const SizedBox(height: 14),
+              _buildBaselineEnvelopeCard(
+                metric: 'Heart Rate Variability',
+                usualRangeText: '47.2 – 62.8 ms',
+                recentValueText: isDemo ? '44.0 ms' : '54.0 ms',
+                recentRelativePosition: isDemo ? 0.12 : 0.44,
+                isDeparted: isDemo,
+                mean: '55.0 ms',
+                stdDev: '4.0 ms',
+                zScore: isDemo ? '-2.75 σ' : '-0.25 σ',
+                sampleCount: 45,
+              ),
+              const SizedBox(height: 14),
+              _buildBaselineEnvelopeCard(
+                metric: 'Sleep Duration',
+                usualRangeText: '6.8 – 9.2 hrs',
+                recentValueText: isDemo ? '6.1 hrs' : '7.8 hrs',
+                recentRelativePosition: isDemo ? 0.08 : 0.42,
+                isDeparted: isDemo,
+                mean: '8.0 hrs',
+                stdDev: '0.6 hrs',
+                zScore: isDemo ? '-3.17 σ' : '-0.33 σ',
+                sampleCount: 45,
+              ),
+              const SizedBox(height: 14),
+              _buildBaselineEnvelopeCard(
+                metric: 'Blood Oxygen (SpO2)',
+                usualRangeText: '96.4 – 99.6%',
+                recentValueText: isDemo ? '97.2%' : '98.5%',
+                recentRelativePosition: isDemo ? 0.25 : 0.65,
+                isDeparted: false,
+                mean: '98.0%',
+                stdDev: '0.8%',
+                zScore: isDemo ? '-1.00 σ' : '+0.62 σ',
+                sampleCount: 45,
+              ),
+            ],
           ),
-          const SizedBox(height: 12),
-
-          _buildBaselineEnvelopeCard(
-            metric: 'Resting Heart Rate',
-            mean: '60.0 bpm',
-            stdDev: '2.5 bpm',
-            range95: '55.1 – 64.9 bpm',
-            currentValue: isDemo ? '64.0 bpm' : '61.0 bpm',
-            zScore: isDemo ? '+1.60 σ' : '+0.40 σ',
-            sampleCount: 45,
-            isCalibrated: true,
-          ),
-          const SizedBox(height: 12),
-          _buildBaselineEnvelopeCard(
-            metric: 'Heart Rate Variability (HRV)',
-            mean: '55.0 ms',
-            stdDev: '4.0 ms',
-            range95: '47.2 – 62.8 ms',
-            currentValue: isDemo ? '44.0 ms' : '54.0 ms',
-            zScore: isDemo ? '-2.75 σ' : '-0.25 σ',
-            sampleCount: 45,
-            isCalibrated: true,
-          ),
-          const SizedBox(height: 12),
-          _buildBaselineEnvelopeCard(
-            metric: 'Sleep Duration',
-            mean: '8.0 hrs',
-            stdDev: '0.6 hrs',
-            range95: '6.8 – 9.2 hrs',
-            currentValue: isDemo ? '6.1 hrs' : '7.8 hrs',
-            zScore: isDemo ? '-3.17 σ' : '-0.33 σ',
-            sampleCount: 45,
-            isCalibrated: true,
-          ),
-          const SizedBox(height: 12),
-          _buildBaselineEnvelopeCard(
-            metric: 'SpO2 (Oxygen Saturation)',
-            mean: '98.0%',
-            stdDev: '0.8%',
-            range95: '96.4 – 99.6%',
-            currentValue: isDemo ? '97.2%' : '98.5%',
-            zScore: isDemo ? '-1.00 σ' : '+0.62 σ',
-            sampleCount: 45,
-            isCalibrated: true,
-          ),
-        ],
+        ),
       ),
     );
   }
 
   Widget _buildBaselineEnvelopeCard({
     required String metric,
+    required String usualRangeText,
+    required String recentValueText,
+    required double recentRelativePosition, // 0.0 to 1.0 position in visual bar
+    required bool isDeparted,
     required String mean,
     required String stdDev,
-    required String range95,
-    required String currentValue,
     required String zScore,
     required int sampleCount,
-    required bool isCalibrated,
   }) {
+    final statusColor = isDeparted ? AppTheme.attention : AppTheme.stable;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -480,85 +512,134 @@ class HealthScreenState extends State<HealthScreen> with SingleTickerProviderSta
                   style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppTheme.textPrimary),
                 ),
               ),
-              const SizedBox(width: 8),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
-                  color: AppTheme.success.withValues(alpha: 0.12),
+                  color: statusColor.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Text(
-                  'CALIBRATED (95% CI)',
-                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: AppTheme.success),
+                child: Text(
+                  isDeparted ? 'MILD SHIFT' : 'WITHIN USUAL',
+                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: statusColor),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('95% Usual Envelope', style: TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
-                    const SizedBox(height: 2),
-                    Text(range95, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: AppTheme.primary)),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('Current Reading', style: TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
-                    const SizedBox(height: 2),
-                    Text(currentValue, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: AppTheme.textPrimary)),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('Current Z-Score', style: TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
-                    const SizedBox(height: 2),
-                    Text(zScore, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: AppTheme.textPrimary)),
-                  ],
-                ),
-              ),
-            ],
+
+          // Visual Range Bar
+          const Text('Your usual range', style: TextStyle(fontSize: 11.5, color: AppTheme.textSecondary, fontWeight: FontWeight.w600)),
+          const SizedBox(height: 6),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final barWidth = constraints.maxWidth;
+              final dotPos = (barWidth * recentRelativePosition.clamp(0.05, 0.95)) - 7;
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      // Continuous range track
+                      Container(
+                        height: 12,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: AppTheme.surfaceElevated,
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: AppTheme.border),
+                        ),
+                      ),
+                      // Usual envelope highlight (center 70% of track)
+                      Positioned(
+                        left: barWidth * 0.15,
+                        right: barWidth * 0.15,
+                        top: 0,
+                        bottom: 0,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppTheme.primary.withValues(alpha: 0.18),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                        ),
+                      ),
+                      // Recent position dot
+                      Positioned(
+                        left: dotPos,
+                        top: -1,
+                        child: Container(
+                          width: 14,
+                          height: 14,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: statusColor,
+                            border: Border.all(color: Colors.white, width: 2),
+                            boxShadow: [
+                              BoxShadow(color: statusColor.withValues(alpha: 0.4), blurRadius: 4),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(usualRangeText, style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary, fontWeight: FontWeight.w500)),
+                      Text('Recent: $recentValueText', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: statusColor)),
+                    ],
+                  ),
+                ],
+              );
+            },
           ),
-          const SizedBox(height: 12),
-          // Expandable Technical Statistics
+          const SizedBox(height: 8),
+
+          // Technical Details Hidden Behind ExpansionTile
           Theme(
             data: ThemeData().copyWith(dividerColor: Colors.transparent),
             child: ExpansionTile(
               tilePadding: EdgeInsets.zero,
               dense: true,
               title: const Text(
-                'View Mathematical Parameters',
+                'Technical details (Mean, SD, Z-Score)',
                 style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold, color: AppTheme.secondary),
               ),
               children: [
                 Container(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: AppTheme.surfaceElevated,
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  child: Column(
                     children: [
-                      Text('Mean (μ): $mean', style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
-                      Text('StdDev (σ): $stdDev', style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
-                      Text('Samples (n): $sampleCount', style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
+                      _buildTechRow('Sample Observations', '$sampleCount daily points'),
+                      _buildTechRow('Mean (μ)', mean),
+                      _buildTechRow('Standard Deviation (σ)', stdDev),
+                      _buildTechRow('Current Z-Score', zScore),
+                      _buildTechRow('Confidence Interval', '95% (μ ± 1.96σ)'),
                     ],
                   ),
                 ),
               ],
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  static Widget _buildTechRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2.5),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
+          Text(value, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppTheme.textPrimary)),
         ],
       ),
     );
