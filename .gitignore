@@ -1,0 +1,29 @@
+# Environment and secret files
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.pfx
+*.p12
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# Backend build artifacts
+backend/target/
+target/
+*.log
+
+# Frontend build artifacts
+frontend/.dart_tool/
+frontend/build/
+frontend/.flutter-plugins
+frontend/.flutter-plugins-dependencies
