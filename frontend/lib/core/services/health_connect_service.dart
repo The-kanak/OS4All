@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:health/health.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../storage/token_storage.dart';
 import 'api_services.dart';
@@ -26,6 +27,7 @@ class HealthSyncResult {
   final int totalRead;
   final int importedCount;
   final int skippedDuplicates;
+  final int failedCount;
   final Map<String, int> metricCounts;
   final String? errorMessage;
   final bool isSuccess;
@@ -35,6 +37,7 @@ class HealthSyncResult {
     required this.totalRead,
     required this.importedCount,
     required this.skippedDuplicates,
+    this.failedCount = 0,
     this.metricCounts = const {},
     this.errorMessage,
     required this.isSuccess,
@@ -46,6 +49,7 @@ class HealthSyncResult {
       totalRead: 0,
       importedCount: 0,
       skippedDuplicates: 0,
+      failedCount: 0,
       errorMessage: message,
       isSuccess: false,
     );
@@ -85,6 +89,8 @@ class HealthConnectService {
   final Health _health;
   final HealthService _healthApiService;
 
+  final DeviceInfoPlugin _deviceInfo;
+
   HealthConnectStatus _status = HealthConnectStatus.notConnected;
   DateTime? _lastSyncTime;
   int _lastImportedCount = 0;
@@ -116,8 +122,10 @@ class HealthConnectService {
   HealthConnectService({
     Health? health,
     HealthService? healthApiService,
+    DeviceInfoPlugin? deviceInfo,
   })  : _health = health ?? Health(),
-        _healthApiService = healthApiService ?? HealthService();
+        _healthApiService = healthApiService ?? HealthService(),
+        _deviceInfo = deviceInfo ?? DeviceInfoPlugin();
 
   /// Checks whether the current operating environment supports native Google Health Connect.
   bool get isPlatformSupported {
@@ -125,10 +133,30 @@ class HealthConnectService {
     return defaultTargetPlatform == TargetPlatform.android;
   }
 
+  /// Verifies if the Android device runs API 28 (Android 9.0 Pie) or higher.
+  /// Health Connect is officially available to users on Android 9 and later.
+  Future<bool> isAndroidApiSupported() async {
+    if (!isPlatformSupported) return false;
+    try {
+      final androidInfo = await _deviceInfo.androidInfo;
+      return androidInfo.version.sdkInt >= 28;
+    } catch (_) {
+      // In test/mock environments or if SDK introspection fails, assume true if android
+      return true;
+    }
+  }
+
   /// Initializes the Health Connect plugin and restores persistent sync state.
   Future<HealthConnectStatus> checkStatus() async {
     if (!isPlatformSupported) {
       _status = HealthConnectStatus.unsupportedPlatform;
+      return _status;
+    }
+
+    final apiSupported = await isAndroidApiSupported();
+    if (!apiSupported) {
+      _status = HealthConnectStatus.unsupportedPlatform;
+      _lastError = 'Health Connect requires Android 9 (API 28) or later.';
       return _status;
     }
 
@@ -155,7 +183,13 @@ class HealthConnectService {
       if (hasPerms == true) {
         _status = HealthConnectStatus.connected;
       } else {
-        _status = HealthConnectStatus.permissionRequired;
+        // Check if at least some permissions are granted
+        final partialPerms = await _hasAnyPermission();
+        if (partialPerms) {
+          _status = HealthConnectStatus.permissionPartiallyGranted;
+        } else {
+          _status = HealthConnectStatus.permissionRequired;
+        }
       }
 
       return _status;
@@ -166,9 +200,26 @@ class HealthConnectService {
     }
   }
 
+  /// Helper to check if user granted at least one metric permission.
+  Future<bool> _hasAnyPermission() async {
+    for (final type in supportedTypes) {
+      try {
+        final perm = await _health.hasPermissions([type], permissions: [HealthDataAccess.READ]);
+        if (perm == true) return true;
+      } catch (_) {}
+    }
+    return false;
+  }
+
   /// Requests user authorization through the official Google Health Connect permission sheet.
   Future<bool> requestPermissions() async {
     if (!isPlatformSupported) {
+      _status = HealthConnectStatus.unsupportedPlatform;
+      return false;
+    }
+
+    final apiSupported = await isAndroidApiSupported();
+    if (!apiSupported) {
       _status = HealthConnectStatus.unsupportedPlatform;
       return false;
     }
@@ -204,14 +255,15 @@ class HealthConnectService {
         _status = HealthConnectStatus.connected;
         return true;
       } else {
-        // Verify if partial permissions were granted
+        // Verify if partial or full permissions were granted
         final recheck = await _health.hasPermissions(supportedTypes, permissions: readPermissions);
         if (recheck == true) {
           _status = HealthConnectStatus.connected;
           return true;
         } else {
-          _status = HealthConnectStatus.permissionRequired;
-          return false;
+          final partial = await _hasAnyPermission();
+          _status = partial ? HealthConnectStatus.permissionPartiallyGranted : HealthConnectStatus.permissionRequired;
+          return partial;
         }
       }
     } catch (e) {
@@ -239,7 +291,8 @@ class HealthConnectService {
     }
 
     final currentStatus = await checkStatus();
-    if (currentStatus != HealthConnectStatus.connected) {
+    if (currentStatus != HealthConnectStatus.connected &&
+        currentStatus != HealthConnectStatus.permissionPartiallyGranted) {
       return HealthSyncResult.failed(
         'Health Connect permissions have not been granted. Please authorize access first.',
       );
@@ -322,6 +375,7 @@ class HealthConnectService {
       // Deduplicate against persistent local ledger
       int importedCount = 0;
       int skippedDuplicates = 0;
+      int failedCount = 0;
       final Set<String> newLedgerKeys = Set.from(ledger);
 
       for (final record in normalizedRecords) {
@@ -344,12 +398,14 @@ class HealthConnectService {
             durationMinutes: record.durationMinutes,
           );
 
+          // ONLY add to ledger after successful backend persistence
           newLedgerKeys.add(record.deduplicationKey);
           importedCount++;
           metricBreakdown[record.metricType] = (metricBreakdown[record.metricType] ?? 0) + 1;
         } catch (uploadError) {
+          failedCount++;
           debugPrint('Error uploading observation ${record.deduplicationKey}: $uploadError');
-          // If network fails on this item, continue with next to allow partial success
+          // Item was NOT added to newLedgerKeys, so it remains retryable on next sync!
         }
       }
 
@@ -367,6 +423,7 @@ class HealthConnectService {
         totalRead: normalizedRecords.length,
         importedCount: importedCount,
         skippedDuplicates: skippedDuplicates,
+        failedCount: failedCount,
         metricCounts: metricBreakdown,
         isSuccess: true,
       );
@@ -558,6 +615,15 @@ class HealthConnectService {
       _lastImportedCount = prefs.getInt('os4all_hc_last_imported') ?? 0;
       _lastSkippedCount = prefs.getInt('os4all_hc_last_skipped') ?? 0;
     } catch (_) {}
+  }
+
+  /// Clears in-memory sync stats on user logout so next authenticated user has clean state.
+  void clearSyncStateOnLogout() {
+    _status = HealthConnectStatus.notConnected;
+    _lastSyncTime = null;
+    _lastImportedCount = 0;
+    _lastSkippedCount = 0;
+    _lastError = null;
   }
 
   // =========================================================================

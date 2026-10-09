@@ -318,6 +318,7 @@ class AppStateManager extends ChangeNotifier {
     _timeline = [];
     _labReports = [];
     _latestInsight = null;
+    _healthConnectService.clearSyncStateOnLogout();
     notifyListeners();
   }
 

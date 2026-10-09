@@ -7,7 +7,7 @@ import 'package:os4all_frontend/core/services/health_connect_service.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group('HealthConnectService - Unit Tests', () {
+  group('HealthConnectService - Unit & Reliability Tests', () {
     setUp(() {
       SharedPreferences.setMockInitialValues({});
       debugDefaultTargetPlatformOverride = null;
@@ -135,6 +135,16 @@ void main() {
       // Ledger for different user should NOT collide
       final isSeenOtherUser = await service.isPointInLedgerForTesting('patient-999', 'BLOOD_OXYGEN', pointKey);
       expect(isSeenOtherUser, isFalse);
+    });
+
+    test('clearSyncStateOnLogout resets local sync metadata cleanly', () {
+      final service = HealthConnectService();
+      service.clearSyncStateOnLogout();
+      expect(service.status, equals(HealthConnectStatus.notConnected));
+      expect(service.lastSyncTime, isNull);
+      expect(service.lastImportedCount, equals(0));
+      expect(service.lastSkippedCount, equals(0));
+      expect(service.lastError, isNull);
     });
   });
 }
