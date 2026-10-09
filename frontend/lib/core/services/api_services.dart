@@ -86,10 +86,11 @@ class UserService {
   }
 
   Future<UserConsentModel> updateConsent(String consentType, bool isGranted) async {
+    final mappedType = consentType == 'EVIDENCE_RETRIEVAL' ? 'EVIDENCE_SEARCH' : consentType;
     final data = await _client.post(
       '/users/consent',
       body: {
-        'consentType': consentType,
+        'consentType': mappedType,
         'granted': isGranted,
       },
     );
@@ -136,11 +137,53 @@ class HealthService {
     required String unit,
     String? source,
   }) async {
+    String mappedType;
+    switch (observationType.toUpperCase()) {
+      case 'HEART_RATE':
+      case 'RESTING_HEART_RATE':
+        mappedType = 'HEART_RATE';
+        break;
+      case 'HRV':
+        mappedType = 'HRV';
+        break;
+      case 'SPO2':
+      case 'OXYGEN_SATURATION':
+        mappedType = 'OXYGEN_SATURATION';
+        break;
+      case 'SLEEP':
+      case 'SLEEP_DURATION':
+        mappedType = 'SLEEP';
+        break;
+      case 'BODY_TEMP':
+      case 'BODY_TEMPERATURE':
+      case 'TEMPERATURE':
+        mappedType = 'BODY_TEMPERATURE';
+        break;
+      case 'STEPS':
+      case 'ACTIVITY':
+        mappedType = 'STEPS';
+        break;
+      case 'BLOOD_GLUCOSE':
+      case 'GLUCOSE':
+        mappedType = 'BLOOD_GLUCOSE';
+        break;
+      case 'BLOOD_PRESSURE_SYSTOLIC':
+      case 'SYSTOLIC':
+        mappedType = 'BLOOD_PRESSURE_SYSTOLIC';
+        break;
+      case 'BLOOD_PRESSURE_DIASTOLIC':
+      case 'DIASTOLIC':
+        mappedType = 'BLOOD_PRESSURE_DIASTOLIC';
+        break;
+      default:
+        mappedType = 'GENERAL';
+    }
+
     await _client.post(
       '/health/observations',
       body: {
-        'type': 'VITAL',
-        'vitalName': observationType,
+        'type': mappedType,
+        'vitalName': mappedType,
         'valueNumeric': valueNumeric,
         'unit': unit,
         'timestamp': DateTime.now().toUtc().toIso8601String(),

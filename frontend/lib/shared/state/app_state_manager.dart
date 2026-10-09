@@ -39,7 +39,7 @@ class AppStateManager extends ChangeNotifier {
   final Map<String, bool> _consents = {
     'DATA_STORAGE': true,
     'AI_INFERENCE': true,
-    'EVIDENCE_RETRIEVAL': true,
+    'EVIDENCE_SEARCH': true,
   };
 
   // UI State
@@ -68,7 +68,7 @@ class AppStateManager extends ChangeNotifier {
   UserConsentModel? get consent => UserConsentModel(
         dataStorageConsent: _consents['DATA_STORAGE'] ?? true,
         aiProcessingConsent: _consents['AI_INFERENCE'] ?? true,
-        evidenceSearchConsent: _consents['EVIDENCE_RETRIEVAL'] ?? true,
+        evidenceSearchConsent: _consents['EVIDENCE_SEARCH'] ?? _consents['EVIDENCE_RETRIEVAL'] ?? true,
       );
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
@@ -375,11 +375,11 @@ class AppStateManager extends ChangeNotifier {
     try {
       _consents['DATA_STORAGE'] = model.dataStorageConsent;
       _consents['AI_INFERENCE'] = model.aiProcessingConsent;
-      _consents['EVIDENCE_RETRIEVAL'] = model.evidenceSearchConsent;
+      _consents['EVIDENCE_SEARCH'] = model.evidenceSearchConsent;
       if (_isLiveMode && _isAuthenticated) {
         await _userService.updateConsent('DATA_STORAGE', model.dataStorageConsent);
         await _userService.updateConsent('AI_INFERENCE', model.aiProcessingConsent);
-        await _userService.updateConsent('EVIDENCE_RETRIEVAL', model.evidenceSearchConsent);
+        await _userService.updateConsent('EVIDENCE_SEARCH', model.evidenceSearchConsent);
       }
       return true;
     } catch (e) {

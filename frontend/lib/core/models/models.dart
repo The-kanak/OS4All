@@ -93,7 +93,7 @@ class UserConsentModel {
   factory UserConsentModel.fromJson(Map<String, dynamic> json) {
     return UserConsentModel(
       consentType: json['consentType'] as String? ?? '',
-      isGranted: json['isGranted'] as bool? ?? false,
+      isGranted: (json['granted'] as bool?) ?? (json['isGranted'] as bool?) ?? false,
       grantedAt: json['grantedAt'] as String?,
       revokedAt: json['revokedAt'] as String?,
       dataStorageConsent: json['dataStorageConsent'] as bool? ?? true,
@@ -556,8 +556,8 @@ class AiInsightModel {
           [],
       confidence: (json['confidence'] as num?)?.toDouble() ?? 0.95,
       urgency: json['urgency'] as String? ?? 'ROUTINE',
-      providerMode: json['aiProviderMode'] as String? ?? json['providerMode'] as String? ?? 'AI Mode',
-      modelName: json['aiModelName'] as String? ?? json['modelName'] as String? ?? 'Nemotron-70B',
+      providerMode: json['provider'] as String? ?? json['aiProviderMode'] as String? ?? json['providerMode'] as String? ?? 'AI Mode',
+      modelName: json['model'] as String? ?? json['aiModelName'] as String? ?? json['modelName'] as String? ?? 'Nemotron-70B',
       disclaimer: json['disclaimer'] as String? ??
           'OS4All interpretations are based strictly on personal historical baselines and do not constitute a medical diagnosis.',
     );
@@ -590,19 +590,26 @@ class CounselorResponseDto {
   });
 
   factory CounselorResponseDto.fromJson(Map<String, dynamic> json) {
+    final obsList = (json['os4allObservations'] ?? json['observations']) as List<dynamic>?;
+    final interpList = (json['aiInterpretations'] ?? json['interpretations']) as List<dynamic>?;
+    final actList = (json['recommendedActions'] ?? json['actions']) as List<dynamic>?;
+    final isEmerg = (json['emergencyFlagged'] as bool?) ??
+        (json['isEmergency'] as bool?) ??
+        (json['urgency']?.toString().toUpperCase() == 'EMERGENCY');
+
     return CounselorResponseDto(
       conversationId: json['conversationId'] as String? ?? '',
       message: json['message'] as String? ?? '',
-      observations: (json['observations'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
-      interpretations: (json['interpretations'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
-      actions: (json['actions'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+      observations: obsList?.map((e) => e.toString()).toList() ?? [],
+      interpretations: interpList?.map((e) => e.toString()).toList() ?? [],
+      actions: actList?.map((e) => e.toString()).toList() ?? [],
       externalEvidence: (json['externalEvidence'] as List<dynamic>?)
               ?.map((e) => EvidenceCitationModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
-      evalGuidance: json['evalGuidance'] as String?,
+      evalGuidance: json['professionalEvaluationGuidance'] as String? ?? json['evalGuidance'] as String?,
       urgency: json['urgency'] as String? ?? 'ROUTINE',
-      isEmergency: json['isEmergency'] as bool? ?? false,
+      isEmergency: isEmerg,
       disclaimer: json['disclaimer'] as String? ??
           'OS4All Health Counselor does not provide medical diagnoses or replace medical professionals.',
     );

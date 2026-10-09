@@ -103,8 +103,8 @@ startxref
           _extractedReport = report;
           _statusMessage = null;
         });
-      } else {
-        // Deterministic fallback for offline / demo presentation
+      } else if (appState.isDemoMode) {
+        // Deterministic fallback exclusively for offline demo presentation
         setState(() {
           _isProcessing = false;
           _extractedReport = LabReportModel(
@@ -152,12 +152,20 @@ startxref
                 value: 52.0,
                 unit: 'mg/dL',
                 referenceLow: 40.0,
+                referenceHigh: 99.0,
                 reviewRequired: false,
                 confidence: 0.97,
               ),
             ],
           );
           _statusMessage = null;
+        });
+      } else {
+        // Live Mode: Honest error display
+        setState(() {
+          _isProcessing = false;
+          _statusMessage = null;
+          _errorMessage = appState.errorMessage ?? 'Report processing failed. Please verify the document format.';
         });
       }
     }
