@@ -8,7 +8,9 @@ import org.os4all.core.security.JwtService;
 import org.os4all.modules.auth.dto.RegisterRequest;
 import org.os4all.modules.auth.service.AuthService;
 import org.os4all.modules.ingestion.dto.CreateObservationRequest;
+import org.os4all.modules.ingestion.entity.HealthObservation;
 import org.os4all.modules.ingestion.entity.ObservationType;
+import org.os4all.modules.ingestion.repository.HealthObservationRepository;
 import org.os4all.modules.lab.dto.CreateLabReportRequest;
 import org.os4all.modules.lab.dto.CreateLabResultItemRequest;
 import org.os4all.modules.user.entity.User;
@@ -49,6 +51,9 @@ class HealthDataEngineIntegrationTest {
 
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    private HealthObservationRepository observationRepository;
 
     private String token;
     private User testUser;
@@ -253,5 +258,90 @@ class HealthDataEngineIntegrationTest {
                 // Timeline sorted chronologically descending: most recent (1 hr ago) first
                 .andExpect(jsonPath("$.data[0].itemType", is("LAB_REPORT")))
                 .andExpect(jsonPath("$.data[1].itemType", is("OBSERVATION")));
+    }
+
+    @Test
+    @DisplayName("Health Connect daily steps re-sync updates aggregate in place without duplicates or affecting manual steps")
+    void shouldUpdateHealthConnectDailyStepsWithoutDuplicatesOrAffectingManualEntries() throws Exception {
+        Instant testDay = Instant.parse("2026-10-09T12:00:00Z");
+
+        // 1. Initial sync from Health Connect: 3,000 steps
+        CreateObservationRequest hcReq1 = new CreateObservationRequest();
+        hcReq1.setType(ObservationType.STEPS);
+        hcReq1.setVitalName("STEPS");
+        hcReq1.setValueNumeric(new BigDecimal("3000"));
+        hcReq1.setUnit("steps");
+        hcReq1.setTimestamp(testDay);
+        hcReq1.setSource("Google Health Connect (Daily Aggregate)");
+        hcReq1.setMetadata("{\"date\":\"2026-10-09\",\"steps\":3000}");
+
+        mockMvc.perform(post("/api/v1/health/observations")
+                        .header("Authorization", token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(hcReq1)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.success", is(true)))
+                .andExpect(jsonPath("$.data.valueNumeric", is(3000)))
+                .andExpect(jsonPath("$.data.source", is("Google Health Connect (Daily Aggregate)")));
+
+        // 2. Later sync on the same day: user now walked 8,000 steps
+        CreateObservationRequest hcReq2 = new CreateObservationRequest();
+        hcReq2.setType(ObservationType.STEPS);
+        hcReq2.setVitalName("STEPS");
+        hcReq2.setValueNumeric(new BigDecimal("8000"));
+        hcReq2.setUnit("steps");
+        hcReq2.setTimestamp(testDay);
+        hcReq2.setSource("Google Health Connect (Daily Aggregate)");
+        hcReq2.setMetadata("{\"date\":\"2026-10-09\",\"steps\":8000}");
+
+        mockMvc.perform(post("/api/v1/health/observations")
+                        .header("Authorization", token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(hcReq2)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.success", is(true)))
+                .andExpect(jsonPath("$.data.valueNumeric", is(8000)))
+                .andExpect(jsonPath("$.data.source", is("Google Health Connect (Daily Aggregate)")));
+
+        // Verify there is ONLY ONE Health Connect observation record in DB, updated to 8000
+        List<HealthObservation> hcRecords = observationRepository.findAll().stream()
+                .filter(o -> o.getUser().getId().equals(testUser.getId()) && "Google Health Connect (Daily Aggregate)".equals(o.getSource()))
+                .toList();
+        org.junit.jupiter.api.Assertions.assertEquals(1, hcRecords.size(), "Should have exactly 1 Health Connect record (no duplicates)");
+        org.junit.jupiter.api.Assertions.assertEquals(0, new BigDecimal("8000").compareTo(hcRecords.get(0).getValueNumeric()));
+
+        // 3. User manually enters 5,000 steps for the same day
+        CreateObservationRequest manualReq = new CreateObservationRequest();
+        manualReq.setType(ObservationType.STEPS);
+        manualReq.setVitalName("STEPS");
+        manualReq.setValueNumeric(new BigDecimal("5000"));
+        manualReq.setUnit("steps");
+        manualReq.setTimestamp(testDay);
+        manualReq.setSource("Manual Entry");
+
+        mockMvc.perform(post("/api/v1/health/observations")
+                        .header("Authorization", token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(manualReq)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.success", is(true)))
+                .andExpect(jsonPath("$.data.valueNumeric", is(5000)))
+                .andExpect(jsonPath("$.data.source", is("Manual Entry")));
+
+        // Verify manual entry is NOT overwritten and Health Connect record is untouched
+        List<HealthObservation> userRecords = observationRepository.findAll().stream()
+                .filter(o -> o.getUser().getId().equals(testUser.getId()))
+                .toList();
+        org.junit.jupiter.api.Assertions.assertEquals(2, userRecords.size(), "Total records must be 2 (1 HC aggregate + 1 manual entry)");
+
+        HealthObservation manualObs = userRecords.stream()
+                .filter(o -> "Manual Entry".equals(o.getSource()))
+                .findFirst().orElseThrow();
+        org.junit.jupiter.api.Assertions.assertEquals(0, new BigDecimal("5000").compareTo(manualObs.getValueNumeric()));
+
+        HealthObservation hcObs = userRecords.stream()
+                .filter(o -> "Google Health Connect (Daily Aggregate)".equals(o.getSource()))
+                .findFirst().orElseThrow();
+        org.junit.jupiter.api.Assertions.assertEquals(0, new BigDecimal("8000").compareTo(hcObs.getValueNumeric()));
     }
 }

@@ -47,6 +47,19 @@ public interface HealthObservationRepository extends JpaRepository<HealthObserva
             @Param("startDate") Instant startDate
     );
 
+    @Query("SELECT o FROM HealthObservation o WHERE o.user.id = :userId " +
+            "AND o.observationType = :obsType " +
+            "AND o.source = :source " +
+            "AND o.timestamp >= :dayStart AND o.timestamp < :dayEnd " +
+            "ORDER BY o.timestamp DESC")
+    List<HealthObservation> findSourceDailyObservations(
+            @Param("userId") UUID userId,
+            @Param("obsType") ObservationType obsType,
+            @Param("source") String source,
+            @Param("dayStart") Instant dayStart,
+            @Param("dayEnd") Instant dayEnd
+    );
+
     void deleteByUserId(UUID userId);
 
     long countByUserId(UUID userId);

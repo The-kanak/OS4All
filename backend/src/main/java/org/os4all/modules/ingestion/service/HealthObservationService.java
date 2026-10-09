@@ -19,6 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -57,36 +60,77 @@ public class HealthObservationService {
                 request.getUnit()
         );
 
-        HealthObservation observation;
-        if (isVitalObservation(request.getType(), request.getVitalName())) {
-            VitalMeasurement vital = new VitalMeasurement();
-            vital.setVitalName(request.getVitalName() != null ? request.getVitalName() : request.getType().name());
-            vital.setDeviceModel(request.getDeviceModel());
-            observation = vital;
-        } else if (isLifestyleObservation(request.getType(), request.getLifestyleCategory())) {
-            LifestyleObservation lifestyle = new LifestyleObservation();
-            lifestyle.setLifestyleCategory(request.getLifestyleCategory() != null ? request.getLifestyleCategory() : request.getType().name());
-            lifestyle.setDurationMinutes(request.getDurationMinutes());
-            observation = lifestyle;
-        } else if (isSymptomObservation(request.getType(), request.getSymptomName())) {
-            SymptomObservation symptom = new SymptomObservation();
-            symptom.setSymptomName(request.getSymptomName() != null ? request.getSymptomName() : (request.getValueText() != null ? request.getValueText() : "Reported Symptom"));
-            symptom.setSeverity(request.getSeverity());
-            symptom.setBodySite(request.getBodySite());
-            observation = symptom;
-        } else {
-            observation = new HealthObservation();
+        HealthObservation observation = null;
+        boolean isUpdate = false;
+
+        // Source-scoped daily aggregation update for Google Health Connect steps
+        if (request.getType() == ObservationType.STEPS && "Google Health Connect (Daily Aggregate)".equals(request.getSource())) {
+            Instant ts = request.getTimestamp() != null ? request.getTimestamp() : Instant.now();
+            LocalDate date = ts.atZone(ZoneOffset.UTC).toLocalDate();
+            Instant dayStart = date.atStartOfDay(ZoneOffset.UTC).toInstant();
+            Instant dayEnd = date.plusDays(1).atStartOfDay(ZoneOffset.UTC).toInstant();
+
+            List<HealthObservation> existing = observationRepository.findSourceDailyObservations(
+                    userId,
+                    request.getType(),
+                    request.getSource(),
+                    dayStart,
+                    dayEnd
+            );
+
+            if (!existing.isEmpty()) {
+                observation = existing.get(0);
+                isUpdate = true;
+                // Coalesce any redundant historical rows for the same date/source
+                if (existing.size() > 1) {
+                    for (int i = 1; i < existing.size(); i++) {
+                        observationRepository.delete(existing.get(i));
+                    }
+                }
+            }
         }
 
-        observation.setUser(user);
-        observation.setObservationType(request.getType());
+        if (!isUpdate) {
+            if (isVitalObservation(request.getType(), request.getVitalName())) {
+                VitalMeasurement vital = new VitalMeasurement();
+                vital.setVitalName(request.getVitalName() != null ? request.getVitalName() : request.getType().name());
+                vital.setDeviceModel(request.getDeviceModel());
+                observation = vital;
+            } else if (isLifestyleObservation(request.getType(), request.getLifestyleCategory())) {
+                LifestyleObservation lifestyle = new LifestyleObservation();
+                lifestyle.setLifestyleCategory(request.getLifestyleCategory() != null ? request.getLifestyleCategory() : request.getType().name());
+                lifestyle.setDurationMinutes(request.getDurationMinutes());
+                observation = lifestyle;
+            } else if (isSymptomObservation(request.getType(), request.getSymptomName())) {
+                SymptomObservation symptom = new SymptomObservation();
+                symptom.setSymptomName(request.getSymptomName() != null ? request.getSymptomName() : (request.getValueText() != null ? request.getValueText() : "Reported Symptom"));
+                symptom.setSeverity(request.getSeverity());
+                symptom.setBodySite(request.getBodySite());
+                observation = symptom;
+            } else {
+                observation = new HealthObservation();
+            }
+
+            observation.setUser(user);
+            observation.setObservationType(request.getType());
+            observation.setSource(request.getSource());
+        } else {
+            if (observation instanceof LifestyleObservation lifestyle) {
+                if (request.getLifestyleCategory() != null) {
+                    lifestyle.setLifestyleCategory(request.getLifestyleCategory());
+                }
+                if (request.getDurationMinutes() != null) {
+                    lifestyle.setDurationMinutes(request.getDurationMinutes());
+                }
+            }
+        }
+
         observation.setValueNumeric(request.getValueNumeric());
         observation.setValueText(request.getValueText());
         observation.setUnit(request.getUnit());
         observation.setStandardValueNumeric(norm.normalizedValue());
         observation.setStandardUnit(norm.normalizedUnit());
         observation.setTimestamp(request.getTimestamp());
-        observation.setSource(request.getSource());
         observation.setConfidence(request.getConfidence() != null ? request.getConfidence() : BigDecimal.valueOf(1.0));
         observation.setMetadata(request.getMetadata());
 
@@ -95,14 +139,14 @@ public class HealthObservationService {
         auditService.record(
                 user,
                 user.getEmail(),
-                "OBSERVATION_RECORDED",
+                isUpdate ? "OBSERVATION_UPDATED" : "OBSERVATION_RECORDED",
                 "HEALTH_OBSERVATION",
                 saved.getId().toString(),
                 clientIp,
-                "Type: " + saved.getObservationType() + ", Source: " + saved.getSource()
+                (isUpdate ? "Updated " : "Type: ") + saved.getObservationType() + ", Source: " + saved.getSource() + (isUpdate ? ", Value: " + saved.getValueNumeric() : "")
         );
 
-        log.info("Recorded observation {} for user {}", saved.getId(), userId);
+        log.info("{} observation {} for user {}", isUpdate ? "Updated" : "Recorded", saved.getId(), userId);
         return mapToResponse(saved);
     }
 

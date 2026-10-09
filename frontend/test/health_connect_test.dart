@@ -137,6 +137,40 @@ void main() {
       expect(isSeenOtherUser, isFalse);
     });
 
+    test('Daily step re-sync allows updated step counts for the same date while deduplicating identical counts', () async {
+      SharedPreferences.setMockInitialValues({});
+      final service = HealthConnectService();
+
+      const userId = 'patient-42';
+      const dateKey = '2026-10-09';
+
+      // 1. Initially, 3,000 steps has not been recorded
+      final seen3000Initial = await service.isStepTotalInLedgerForTesting(userId, dateKey, 3000);
+      expect(seen3000Initial, isFalse);
+
+      // 2. Record 3,000 steps in ledger after successful initial sync
+      await service.recordStepTotalInLedgerForTesting(userId, dateKey, 3000);
+
+      // 3. Redundant sync with same 3,000 steps is recognized as duplicate
+      final seen3000Later = await service.isStepTotalInLedgerForTesting(userId, dateKey, 3000);
+      expect(seen3000Later, isTrue);
+
+      // 4. Later in the day, user reaches 8,000 steps. This is NOT considered a duplicate!
+      final seen8000 = await service.isStepTotalInLedgerForTesting(userId, dateKey, 8000);
+      expect(seen8000, isFalse);
+
+      // 5. Record 8,000 steps in ledger after successful update
+      await service.recordStepTotalInLedgerForTesting(userId, dateKey, 8000);
+
+      // 6. 8,000 steps is now recorded as duplicate for any subsequent checks
+      final seen8000Later = await service.isStepTotalInLedgerForTesting(userId, dateKey, 8000);
+      expect(seen8000Later, isTrue);
+
+      // 7. Old 3,000 key was pruned
+      final seenOldPruned = await service.isStepTotalInLedgerForTesting(userId, dateKey, 3000);
+      expect(seenOldPruned, isFalse);
+    });
+
     test('clearSyncStateOnLogout resets local sync metadata cleanly', () {
       final service = HealthConnectService();
       service.clearSyncStateOnLogout();

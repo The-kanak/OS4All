@@ -351,7 +351,7 @@ class HealthConnectService {
         final stepCount = entry.value;
         if (stepCount > 0 && stepCount <= 150000) {
           final dayDate = DateTime.tryParse('${dateKey}T12:00:00Z') ?? now;
-          final dedupKey = '${userId}_STEPS_$dateKey';
+          final dedupKey = '${userId}_STEPS_${dateKey}_$stepCount';
           normalizedRecords.add(
             NormalizedHealthRecord(
               deduplicationKey: dedupKey,
@@ -366,6 +366,7 @@ class HealthConnectService {
                 'healthConnectType': 'STEPS',
                 'aggregation': 'DAILY_TOTAL',
                 'date': dateKey,
+                'steps': stepCount,
               }),
             ),
           );
@@ -399,6 +400,11 @@ class HealthConnectService {
           );
 
           // ONLY add to ledger after successful backend persistence
+          if (record.metricType == 'STEPS') {
+            final datePrefix = '${userId}_STEPS_${_formatDateKey(record.timestamp)}';
+            newLedgerKeys.remove(datePrefix); // Remove legacy key without count
+            newLedgerKeys.removeWhere((k) => k.startsWith('${datePrefix}_'));
+          }
           newLedgerKeys.add(record.deduplicationKey);
           importedCount++;
           metricBreakdown[record.metricType] = (metricBreakdown[record.metricType] ?? 0) + 1;
@@ -643,6 +649,21 @@ class HealthConnectService {
     final ledger = await _loadDeduplicationLedger(userId);
     final key = '${userId}_${type}_$pointUuid';
     ledger.add(key);
+    await _saveDeduplicationLedger(userId, ledger);
+  }
+
+  Future<bool> isStepTotalInLedgerForTesting(String userId, String dateKey, int stepCount) async {
+    final ledger = await _loadDeduplicationLedger(userId);
+    final key = '${userId}_STEPS_${dateKey}_$stepCount';
+    return ledger.contains(key);
+  }
+
+  Future<void> recordStepTotalInLedgerForTesting(String userId, String dateKey, int stepCount) async {
+    final ledger = await _loadDeduplicationLedger(userId);
+    final datePrefix = '${userId}_STEPS_$dateKey';
+    ledger.remove(datePrefix);
+    ledger.removeWhere((k) => k.startsWith('${datePrefix}_'));
+    ledger.add('${userId}_STEPS_${dateKey}_$stepCount');
     await _saveDeduplicationLedger(userId, ledger);
   }
 }
