@@ -4,6 +4,7 @@ import '../../core/models/models.dart';
 import '../../core/network/api_exception.dart';
 import '../../core/network/app_config.dart';
 import '../../core/services/api_services.dart';
+import '../../core/services/health_connect_service.dart';
 import '../../core/storage/token_storage.dart';
 import '../../core/utils/demo_data.dart';
 
@@ -19,6 +20,7 @@ class AppStateManager extends ChangeNotifier {
   final AiService _aiService = AiService();
   final CounselorService _counselorService = CounselorService();
   final DemoService _demoService = DemoService();
+  final HealthConnectService _healthConnectService = HealthConnectService();
 
   // Authentication & Session
   bool _isInitialized = false;
@@ -70,6 +72,7 @@ class AppStateManager extends ChangeNotifier {
         aiProcessingConsent: _consents['AI_INFERENCE'] ?? true,
         evidenceSearchConsent: _consents['EVIDENCE_SEARCH'] ?? _consents['EVIDENCE_RETRIEVAL'] ?? true,
       );
+  HealthConnectService get healthConnect => _healthConnectService;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
@@ -91,6 +94,9 @@ class AppStateManager extends ChangeNotifier {
     _isAuthenticated = token != null && token.isNotEmpty;
     _isLiveMode = live;
     _isInitialized = true;
+
+    // Check Google Health Connect state asynchronously on supported platforms
+    await _healthConnectService.checkStatus();
 
     if (_isAuthenticated || !_isLiveMode) {
       await refreshAllData();
@@ -511,6 +517,36 @@ class AppStateManager extends ChangeNotifier {
     try {
       await _demoService.resetDemo();
       await refreshAllData();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  // Google Health Connect Operations
+  Future<HealthConnectStatus> checkHealthConnectStatus() async {
+    final status = await _healthConnectService.checkStatus();
+    notifyListeners();
+    return status;
+  }
+
+  Future<bool> connectHealthConnect() async {
+    final success = await _healthConnectService.requestPermissions();
+    notifyListeners();
+    return success;
+  }
+
+  Future<HealthSyncResult> syncHealthConnect({int daysToRead = 30}) async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      final result = await _healthConnectService.syncHealthData(daysToRead: daysToRead);
+      if (result.isSuccess && result.importedCount > 0) {
+        await refreshAllData();
+      } else {
+        notifyListeners();
+      }
+      return result;
     } finally {
       _isLoading = false;
       notifyListeners();

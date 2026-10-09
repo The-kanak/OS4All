@@ -4,6 +4,7 @@ import '../../core/network/app_config.dart';
 import '../../core/theme/app_theme.dart';
 import '../../shared/state/app_state_manager.dart';
 import '../../shared/widgets/healthcare_widgets.dart';
+import '../../shared/widgets/health_connect_card.dart';
 import '../auth/login_screen.dart';
 import '../consent/consent_screen.dart';
 import '../dashboard/flagship_demo_screen.dart';
@@ -276,7 +277,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                // Honest Device Connections
+                // Health Data & Device Connections
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
@@ -300,13 +301,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               color: AppTheme.surfaceElevated,
                               borderRadius: BorderRadius.circular(6),
                             ),
-                            child: const Text('TRANSPARENT', style: TextStyle(fontSize: 9.5, fontWeight: FontWeight.w800, color: AppTheme.textSecondary)),
+                            child: const Text('NATIVE HEALTH', style: TextStyle(fontSize: 9.5, fontWeight: FontWeight.w800, color: AppTheme.primary)),
                           ),
                         ],
                       ),
                       const Divider(height: 16, color: AppTheme.border),
-                      _buildDeviceRow('Google Health Connect', 'Not connected (Tap to connect)', false),
-                      _buildDeviceRow('Smart Biosensor Watch', 'Sensor sync connector in development', false),
+                      const GoogleHealthConnectCard(),
+                      const SizedBox(height: 12),
                       _buildDeviceRow('Manual Vital Telemetry', 'Active & calibrated', true),
                     ],
                   ),

@@ -136,6 +136,11 @@ class HealthService {
     required double valueNumeric,
     required String unit,
     String? source,
+    DateTime? timestamp,
+    String? metadata,
+    String? vitalName,
+    int? durationMinutes,
+    double? confidence,
   }) async {
     String mappedType;
     switch (observationType.toUpperCase()) {
@@ -179,16 +184,21 @@ class HealthService {
         mappedType = 'GENERAL';
     }
 
+    final body = <String, dynamic>{
+      'type': mappedType,
+      'vitalName': vitalName ?? (observationType.toUpperCase() == 'RESTING_HEART_RATE' ? 'RESTING_HEART_RATE' : mappedType),
+      'valueNumeric': valueNumeric,
+      'unit': unit,
+      'timestamp': (timestamp ?? DateTime.now()).toUtc().toIso8601String(),
+      'source': source ?? 'Manual Entry',
+      if (confidence != null) 'confidence': confidence,
+      if (metadata != null) 'metadata': metadata,
+      if (durationMinutes != null) 'durationMinutes': durationMinutes,
+    };
+
     await _client.post(
       '/health/observations',
-      body: {
-        'type': mappedType,
-        'vitalName': mappedType,
-        'valueNumeric': valueNumeric,
-        'unit': unit,
-        'timestamp': DateTime.now().toUtc().toIso8601String(),
-        'source': source ?? 'Manual Entry',
-      },
+      body: body,
     );
   }
 }

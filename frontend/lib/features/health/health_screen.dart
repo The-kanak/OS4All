@@ -3,6 +3,7 @@ import '../../core/theme/app_theme.dart';
 import '../../shared/state/app_state_manager.dart';
 import '../../shared/widgets/add_vital_observation_dialog.dart';
 import '../../shared/widgets/healthcare_widgets.dart';
+import '../../shared/widgets/health_connect_card.dart';
 import '../labs/report_upload_screen.dart';
 
 class HealthScreen extends StatefulWidget {
@@ -166,6 +167,8 @@ class HealthScreenState extends State<HealthScreen> with SingleTickerProviderSta
                 ),
               ],
             ),
+            const SizedBox(height: 12),
+            const GoogleHealthConnectCard(compact: true),
             const SizedBox(height: 16),
             if (signals.isEmpty && !isDemo)
               _buildEmptyState(
