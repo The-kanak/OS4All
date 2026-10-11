@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OS4All | Preventive Health Intelligence</title>
+  
+  <!-- SEO & Social Sharing Metadata -->
+  <meta name="description" content="OS4All is an Android-based preventive health intelligence project for the Seva Innovation Challenge, designed to help people explore physiological baselines, notice health trends, and support conversations with doctors.">
+  <meta name="keywords" content="OS4All, Preventive Health Intelligence, Seva Innovation Challenge, Android, Flutter, Health Connect, Physiological Baselines, HRV, Digital Health">
+  <meta name="author" content="OS4All Project Team">
+  <meta name="robots" content="index, follow">
+  
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="OS4All">
+  <meta property="og:title" content="OS4All | Preventive Health Intelligence">
+  <meta property="og:description" content="Understand your health. Notice the changes. An open-source preventive health intelligence platform built for the Seva Innovation Challenge.">
+  <meta property="og:image" content="assets/favicon.svg">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="OS4All | Preventive Health Intelligence">
+  <meta name="twitter:description" content="Understand your health. Notice the changes. An open-source preventive health intelligence platform.">
+  <meta name="twitter:image" content="assets/favicon.svg">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Accessible Skip Link -->
+  <a href="#mainContent" class="skip-link">Skip to main content</a>
+
+  <!-- =========================================================================
+       Navigation Header
+       ========================================================================= -->
+  <header class="navbar" role="banner">
+    <div class="container">
+      <div class="nav-brand">
+        <a href="#hero" aria-label="OS4All Home">
+          <img src="assets/logo.svg" alt="OS4All Logo" width="160" height="38">
+        </a>
+        <span class="nav-tag">Seva Innovation Challenge</span>
+      </div>
+
+      <nav class="nav-menu" id="navMenu" role="navigation" aria-label="Primary Navigation">
+        <a href="#about" class="nav-link">About</a>
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#how-it-works" class="nav-link">How It Works</a>
+        <a href="#preview" class="nav-link">Concept UI</a>
+        <a href="#technology" class="nav-link">Technology</a>
+        <a href="#safety" class="nav-link">Safety</a>
+        <a href="#explore" class="nav-link">Explore</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="https://github.com/The-kanak/OS4All" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" aria-label="View OS4All Source Code on GitHub">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          Source Code
+        </a>
+      </div>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navMenu">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="mainContent">
+
+    <!-- =======================================================================
+         Hero Section
+         ======================================================================= -->
+    <section class="hero-section" id="hero" aria-labelledby="heroHeadline">
+      <div class="container">
+        <div class="hero-grid">
+          
+          <div class="hero-content">
+            <div class="hero-challenge-pill">
+              <span class="pulse-dot"></span>
+              <span>Prepared for the <strong>Seva Innovation Challenge</strong></span>
+            </div>
+
+            <div class="hero-label">Preventive Health Intelligence</div>
+
+            <h1 class="hero-headline" id="heroHeadline">
+              Understand your health. <br>
+              <span class="gradient-text">Notice the changes.</span>
+            </h1>
+
+            <p class="hero-description">
+              OS4All is an Android-based preventive health intelligence project designed to help people explore health trends, understand health information, and become more aware of changes in their health data.
+            </p>
+
+            <div class="hero-actions">
+              <a href="#explore" class="btn btn-primary">
+                Explore the Project
+                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+              <a href="https://github.com/The-kanak/OS4All" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                </svg>
+                View Source Code
+              </a>
+            </div>
+
+            <!-- Architecture Quick-Facts -->
+            <div class="hero-badges-row">
+              <div class="hero-stat-item">
+                <span class="hero-stat-value">Personal Baseline</span>
+                <span class="hero-stat-label">7+ Day Rolling Envelope</span>
+              </div>
+              <div class="hero-stat-item">
+                <span class="hero-stat-value">Multi-Signal Drift</span>
+                <span class="hero-stat-label">HRV, RHR, SpO2 & Sleep</span>
+              </div>
+              <div class="hero-stat-item">
+                <span class="hero-stat-value">Health Connect</span>
+                <span class="hero-stat-label">Native Android Sync</span>
+              </div>
+              <div class="hero-stat-item">
+                <span class="hero-stat-value">Zero-Trust</span>
+                <span class="hero-stat-label">SHA-256 Audit Log</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Illustrative Phone Mockup in Hero -->
+          <div class="phone-mockup-wrapper" id="preview">
+            <div class="phone-mockup-glow" aria-hidden="true"></div>
+            
+            <div class="phone-frame" role="region" aria-label="Illustrative Android Dashboard Mockup">
+              <div class="phone-notch">
+                <div class="notch-speaker"></div>
+                <div class="notch-camera"></div>
+              </div>
+
+              <div class="phone-status-bar">
+                <span>9:41</span>
+                <span>LTE • 100%</span>
+              </div>
+
+              <div class="phone-screen">
+                <div class="mockup-app-header">
+                  <div class="mockup-app-brand">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#00f5d4" stroke-width="2">
+                      <path d="M3 12h4l3-8 4 16 3-8h4"/>
+                    </svg>
+                    <span>OS4All Dashboard</span>
+                  </div>
+                  <span class="mockup-live-indicator">● Baseline Active</span>
+                </div>
+
+                <!-- Interactive Switcher inside Mockup -->
+                <div class="mockup-nav-tabs">
+                  <button class="mockup-tab-btn active" data-target="panelVitals">Vitals</button>
+                  <button class="mockup-tab-btn" data-target="panelTrend">Drift</button>
+                  <button class="mockup-tab-btn" data-target="panelTalk">Consult</button>
+                </div>
+
+                <div class="mockup-card-body">
+                  
+                  <!-- Panel 1: Vitals -->
+                  <div class="mock-card mockup-panel" id="panelVitals">
+                    <div class="mock-card-header">
+                      <span>7-DAY ROLLING BASELINE</span>
+                      <span class="status-ok">● Within Baseline</span>
+                    </div>
+                    <div class="mock-vitals-grid">
+                      <div class="mock-vital-box">
+                        <span class="mock-vital-label">Resting HR</span>
+                        <span class="mock-vital-val">64 <small style="font-size:0.6rem;font-weight:400;">bpm</small></span>
+                        <span class="mock-vital-status status-ok">Envelope: 60-68</span>
+                      </div>
+                      <div class="mock-vital-box">
+                        <span class="mock-vital-label">Nocturnal HRV</span>
+                        <span class="mock-vital-val">62 <small style="font-size:0.6rem;font-weight:400;">ms</small></span>
+                        <span class="mock-vital-status status-ok">Envelope: 56-68</span>
+                      </div>
+                      <div class="mock-vital-box">
+                        <span class="mock-vital-label">Oxygen (SpO2)</span>
+                        <span class="mock-vital-val">98 <small style="font-size:0.6rem;font-weight:400;">%</small></span>
+                        <span class="mock-vital-status status-ok">Stable</span>
+                      </div>
+                      <div class="mock-vital-box">
+                        <span class="mock-vital-label">Sleep Duration</span>
+                        <span class="mock-vital-val">7.4 <small style="font-size:0.6rem;font-weight:400;">hrs</small></span>
+                        <span class="mock-vital-status status-ok">Sufficient</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Panel 2: Trend / Multi-signal Anomaly -->
+                  <div class="mock-card mockup-panel" id="panelTrend" style="display:none;">
+                    <div class="mock-card-header">
+                      <span>AUTONOMIC STRAIN MONITOR</span>
+                      <span class="status-warn">● Minor Variance</span>
+                    </div>
+                    <p style="font-size:0.75rem; color:var(--text-secondary); line-height:1.4;">
+                      Consecutive 3-day autonomic drift detected. Nocturnal HRV suppressed by 11% while resting heart rate shifted +4 bpm above baseline median.
+                    </p>
+                    <div class="mock-drift-chart">
+                      <div class="mock-chart-bar" style="height:40%;"></div>
+                      <div class="mock-chart-bar" style="height:48%;"></div>
+                      <div class="mock-chart-bar" style="height:45%;"></div>
+                      <div class="mock-chart-bar" style="height:38%;"></div>
+                      <div class="mock-chart-bar strain" style="height:70%;" title="Day 5 shift"></div>
+                      <div class="mock-chart-bar strain" style="height:82%;" title="Day 6 shift"></div>
+                      <div class="mock-chart-bar strain" style="height:85%;" title="Day 7 shift"></div>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;font-size:0.62rem;color:var(--text-muted);">
+                      <span>Mon (Baseline)</span>
+                      <span style="color:var(--accent-amber);">Sun (Shift Observed)</span>
+                    </div>
+                  </div>
+
+                  <!-- Panel 3: Clinical Consultation Talking Points -->
+                  <div class="mock-card mockup-panel" id="panelTalk" style="display:none;">
+                    <div class="mock-card-header">
+                      <span>DOCTOR TALKING POINTS</span>
+                      <span style="color:var(--accent-cyan);">● Non-Diagnostic</span>
+                    </div>
+                    <ul style="font-size:0.72rem; color:var(--text-secondary); display:flex; flex-direction:column; gap:6px;">
+                      <li>• Discuss 3-day nocturnal HRV drop during recovery.</li>
+                      <li>• Review recent sleep disruption against training load.</li>
+                      <li>• Bring verified fasting lipid lab values for review.</li>
+                    </ul>
+                  </div>
+
+                  <!-- Mock Report Card Preview -->
+                  <div class="mock-card">
+                    <div class="mock-card-header">
+                      <span>DIAGNOSTIC REPORT OCR</span>
+                      <span style="font-size:0.65rem;color:var(--accent-teal);">Human Reviewed</span>
+                    </div>
+                    <div style="font-size:0.74rem;color:var(--text-secondary);display:flex;justify-content:space-between;">
+                      <span>Fasting Glucose</span>
+                      <strong>92 mg/dL</strong>
+                    </div>
+                    <div style="font-size:0.74rem;color:var(--text-secondary);display:flex;justify-content:space-between;">
+                      <span>Total Cholesterol</span>
+                      <strong>184 mg/dL</strong>
+                    </div>
+                  </div>
+
+                  <div class="mock-disclaimer-tag">
+                    Illustrative Concept UI — Synthetic Demonstration Data
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         Mandatory Safety & Disclaimer Banner
+         ======================================================================= -->
+    <section class="disclaimer-banner" aria-label="Medical Disclaimer">
+      <div class="container">
+        <div class="disclaimer-box">
+          <svg class="disclaimer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+          <div class="disclaimer-text">
+            <strong>Medical Notice & Non-Diagnostic Statement:</strong>
+            OS4All is an early-stage health technology project intended to support health awareness. It is not a medical device and does not replace professional medical advice, diagnosis, or treatment. Consult a qualified healthcare professional about medical concerns.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         About OS4All Section
+         ======================================================================= -->
+    <section class="about-section" id="about" aria-labelledby="aboutTitle">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            Project Motivation
+          </span>
+          <h2 class="section-title" id="aboutTitle">Why Personal Baseline Intelligence Matters</h2>
+          <p class="section-subtitle">
+            Traditional health assessment relies primarily on static population reference ranges. OS4All explores personal physiological homeostatic baselines so subtle shifts don't go unnoticed.
+          </p>
+        </div>
+
+        <div class="about-grid">
+          <div class="about-text">
+            <p>
+              Traditional healthcare metrics often notify an individual only after a value crosses an arbitrary statistical population threshold. Yet what is considered average across millions of people is not necessarily normal for you.
+            </p>
+            <div class="about-quote">
+              "Normal for the general population is not necessarily normal for the individual."
+            </div>
+            <p>
+              Subtle multi-day autonomic shifts—such as nocturnal Heart Rate Variability (HRV) suppression paired with a rising resting heart rate and fragmented slow-wave sleep—often precede noticeable physiological fatigue or acute strain by days.
+            </p>
+            <p>
+              OS4All provides an open-source architecture that models individual baselines from longitudinal wearable streams and uploaded lab reports, helping people understand shifts in their health data before important trends are overlooked.
+            </p>
+          </div>
+
+          <div class="about-comparison-card">
+            <h3 class="comparison-header">
+              <span>Population Cutoffs vs. Personal Baseline</span>
+            </h3>
+            <div class="comparison-list">
+              <div class="comparison-item">
+                <span class="comparison-icon trad">✕</span>
+                <div>
+                  <strong>Static Population Ranges:</strong>
+                  Flags metrics only when individuals cross broad statistical extremes, overlooking gradual internal drift.
+                </div>
+              </div>
+              <div class="comparison-item">
+                <span class="comparison-icon os4all">✓</span>
+                <div>
+                  <strong>Personal Rolling Baseline:</strong>
+                  Computes individual confidence envelopes over 7+ days to detect meaningful deviations tailored to your physiology.
+                </div>
+              </div>
+              <div class="comparison-item">
+                <span class="comparison-icon trad">✕</span>
+                <div>
+                  <strong>Isolated Metric Silos:</strong>
+                  Vitals, sleep records, and laboratory reports are analyzed in separate disconnected dashboards.
+                </div>
+              </div>
+              <div class="comparison-item">
+                <span class="comparison-icon os4all">✓</span>
+                <div>
+                  <strong>Multi-Signal Correlation:</strong>
+                  Correlates HRV, resting heart rate, sleep duration, and lab markers to highlight autonomic strain holistically.
+                </div>
+              </div>
+              <div class="comparison-item">
+                <span class="comparison-icon os4all">✓</span>
+                <div>
+                  <strong>Doctor-Ready Talking Points:</strong>
+                  Translates data drift into structured, non-diagnostic questions for qualified clinical consultations.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         Features Section (Clearly Distinguishing Verified from Fallback)
+         ======================================================================= -->
+    <section class="features-section" id="features" aria-labelledby="featuresTitle">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+            System Capabilities
+          </span>
+          <h2 class="section-title" id="featuresTitle">Core Platform Capabilities</h2>
+          <p class="section-subtitle">
+            All capabilities below are grounded in the verified repository implementation, with transparent distinction between local deterministic algorithms and external service integrations.
+          </p>
+        </div>
+
+        <div class="features-grid">
+          
+          <!-- Feature 1 -->
+          <article class="feature-card">
+            <div class="feature-card-top">
+              <div class="feature-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                </svg>
+              </div>
+              <span class="status-pill verified">Implemented</span>
+            </div>
+            <h3 class="feature-title">Health Trend Monitoring</h3>
+            <p class="feature-desc">
+              Continuously computes rolling statistical baselines (mean, median, standard deviation, interquartile range, confidence envelopes) across Resting Heart Rate, HRV, SpO2, sleep duration, and body temperature.
+            </p>
+            <div class="feature-tech-tag">
+              <span>Engine:</span> BaselineEngine.java (7+ day threshold)
+            </div>
+          </article>
+
+          <!-- Feature 2 -->
+          <article class="feature-card">
+            <div class="feature-card-top">
+              <div class="feature-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="16" y1="13" x2="8" y2="13"/>
+                  <line x1="16" y1="17" x2="8" y2="17"/>
+                  <polyline points="10 9 9 9 8 9"/>
+                </svg>
+              </div>
+              <span class="status-pill review">Verified with Review</span>
+            </div>
+            <h3 class="feature-title">Medical Report Information & OCR</h3>
+            <p class="feature-desc">
+              Ingests diagnostic laboratory documents (PDF, PNG, JPG/JPEG) with Apache PDFBox text extraction and heuristic biomarker parsing. Includes a human-in-the-loop review interface before committing any biomarker.
+            </p>
+            <div class="feature-tech-tag">
+              <span>Engine:</span> Apache PDFBox + Human Review Step
+            </div>
+          </article>
+
+          <!-- Feature 3 -->
+          <article class="feature-card">
+            <div class="feature-card-top">
+              <div class="feature-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                  <line x1="8" y1="21" x2="16" y2="21"/>
+                  <line x1="12" y1="17" x2="12" y2="21"/>
+                </svg>
+              </div>
+              <span class="status-pill fallback">Live + Mock Fallback</span>
+            </div>
+            <h3 class="feature-title">AI-Assisted Health Information</h3>
+            <p class="feature-desc">
+              5-agent intelligence layer orchestrating context extraction, trend analysis, and synthesis using NVIDIA Nemotron (via Nebius AI Studio). Enforces strict JSON Schema with a deterministic offline mock fallback.
+            </p>
+            <div class="feature-tech-tag">
+              <span>Model:</span> Llama-3.1-Nemotron-70B / Offline Mock
+            </div>
+          </article>
+
+          <!-- Feature 4 -->
+          <article class="feature-card">
+            <div class="feature-card-top">
+              <div class="feature-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                  <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+                  <path d="M16 3.13a4 4 0 010 7.75"/>
+                </svg>
+              </div>
+              <span class="status-pill verified">Implemented</span>
+            </div>
+            <h3 class="feature-title">Personal Health Overview</h3>
+            <p class="feature-desc">
+              Unified cross-metric biometric dashboard presenting daily telemetry, historical trend envelopes, sleep architecture, and laboratory values in clean Material 3 visualizations.
+            </p>
+            <div class="feature-tech-tag">
+              <span>UI:</span> Flutter Material 3 Dashboard
+            </div>
+          </article>
+
+          <!-- Feature 5 -->
+          <article class="feature-card">
+            <div class="feature-card-top">
+              <div class="feature-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M12 6v6l4 2"/>
+                </svg>
+              </div>
+              <span class="status-pill verified">Implemented</span>
+            </div>
+            <h3 class="feature-title">Preventive Health Awareness</h3>
+            <p class="feature-desc">
+              Deterministic, rule-based cross-signal correlation engine flagging acute stress, cumulative autonomic fatigue, recovery deficits, and sustained multi-day baseline drift without black-box opacity.
+            </p>
+            <div class="feature-tech-tag">
+              <span>Rule Engine:</span> AnomalyDetectionService.java
+            </div>
+          </article>
+
+          <!-- Feature 6 -->
+          <article class="feature-card">
+            <div class="feature-card-top">
+              <div class="feature-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0110 0v4"/>
+                </svg>
+              </div>
+              <span class="status-pill verified">Implemented</span>
+            </div>
+            <h3 class="feature-title">Privacy-Conscious Data Handling</h3>
+            <p class="feature-desc">
+              Zero client-side secrets. Cryptographically hash-chained SHA-256 audit ledger tracking sensitive operations. Granular user opt-ins for data storage, AI inference, and evidence search.
+            </p>
+            <div class="feature-tech-tag">
+              <span>Security:</span> SHA-256 Audit Chaining & Consent
+            </div>
+          </article>
+
+          <!-- Feature 7 -->
+          <article class="feature-card">
+            <div class="feature-card-top">
+              <div class="feature-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"/>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+              </div>
+              <span class="status-pill fallback">Live + Mock Fallback</span>
+            </div>
+            <h3 class="feature-title">Biomedical Literature Grounding</h3>
+            <p class="feature-desc">
+              Curates biomedical references via Tavily Search, filtered strictly to peer-reviewed sources (PubMed, Nature, NEJM, AHA journals) with 0.65+ relevance threshold and offline mock fallback.
+            </p>
+            <div class="feature-tech-tag">
+              <span>Evidence:</span> Tavily Search / Mock Provider
+            </div>
+          </article>
+
+          <!-- Feature 8 -->
+          <article class="feature-card">
+            <div class="feature-card-top">
+              <div class="feature-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2a10 10 0 100 20 10 10 0 000-20z"/>
+                  <path d="M12 6v6l4 2"/>
+                </svg>
+              </div>
+              <span class="status-pill verified">Implemented</span>
+            </div>
+            <h3 class="feature-title">Native Google Health Connect</h3>
+            <p class="feature-desc">
+              Direct Android Health Connect integration with runtime permission workflows and an in-memory deduplication ledger to prevent double-counting wearable sync records.
+            </p>
+            <div class="feature-tech-tag">
+              <span>Android:</span> API 28+ Google Health Connect
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         How It Works Section
+         ======================================================================= -->
+    <section class="how-it-works-section" id="how-it-works" aria-labelledby="howItWorksTitle">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+            </svg>
+            Transparent Workflow
+          </span>
+          <h2 class="section-title" id="howItWorksTitle">How OS4All Works</h2>
+          <p class="section-subtitle">
+            A simple three-step approach grounded in transparent algorithms, human verification, and respectful clinical collaboration.
+          </p>
+        </div>
+
+        <div class="steps-grid">
+          
+          <!-- Step 1 -->
+          <div class="step-card">
+            <div class="step-number">1</div>
+            <h3 class="step-title">Explore Health Information</h3>
+            <p class="step-desc">
+              Sync continuous wearable telemetry (resting heart rate, nocturnal HRV, SpO2, sleep) via Google Health Connect, or upload diagnostic lab PDFs with human-in-the-loop verification.
+            </p>
+            <div class="step-note">
+              ✓ Requires user confirmation for extracted lab biomarkers before saving.
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="step-card">
+            <div class="step-number">2</div>
+            <h3 class="step-title">Review Trends & Relevant Insights</h3>
+            <p class="step-desc">
+              The deterministic baseline engine computes your 7+ day physiological envelope. When multi-signal drift occurs, AI agents summarize the variance grounded in peer-reviewed literature.
+            </p>
+            <div class="step-note">
+              ✓ Rule-based multi-signal correlation (no opaque black box).
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="step-card">
+            <div class="step-number">3</div>
+            <h3 class="step-title">Support Clinical Conversations</h3>
+            <p class="step-desc">
+              Use structured biometric summaries and physician talking points during your consultations with a doctor or qualified clinician to have an informed, objective discussion.
+            </p>
+            <div class="step-note">
+              ✓ Non-diagnostic information designed for collaboration.
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         Technology Architecture Section
+         ======================================================================= -->
+    <section class="tech-section" id="technology" aria-labelledby="techTitle">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+              <rect x="9" y="9" width="6" height="6"></rect>
+              <line x1="9" y1="1" x2="9" y2="4"></line>
+              <line x1="15" y1="1" x2="15" y2="4"></line>
+              <line x1="9" y1="20" x2="9" y2="23"></line>
+              <line x1="15" y1="20" x2="15" y2="23"></line>
+              <line x1="20" y1="9" x2="23" y2="9"></line>
+              <line x1="20" y1="14" x2="23" y2="14"></line>
+              <line x1="1" y1="9" x2="4" y2="9"></line>
+              <line x1="1" y1="14" x2="4" y2="14"></line>
+            </svg>
+            Technology Foundation
+          </span>
+          <h2 class="section-title" id="techTitle">Verified Technology Stack</h2>
+          <p class="section-subtitle">
+            Built using modern, enterprise-grade engineering principles across client, server, and intelligence components.
+          </p>
+        </div>
+
+        <div class="tech-grid">
+          
+          <!-- Tech 1 -->
+          <div class="tech-card">
+            <div class="tech-card-header">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                <line x1="12" y1="18" x2="12.01" y2="18"/>
+              </svg>
+              <span>Android Frontend</span>
+            </div>
+            <div class="tech-tags-list">
+              <span class="tech-tag">Flutter 3.47+</span>
+              <span class="tech-tag">Dart 3.13+</span>
+              <span class="tech-tag">Material 3</span>
+              <span class="tech-tag">Health Connect</span>
+            </div>
+            <p>
+              Cross-platform client with native Android Health Connect integration, deduplication ledger, and responsive UI.
+            </p>
+          </div>
+
+          <!-- Tech 2 -->
+          <div class="tech-card">
+            <div class="tech-card-header">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="2" width="20" height="8" rx="2" ry="2"/>
+                <rect x="2" y="14" width="20" height="8" rx="2" ry="2"/>
+                <line x1="6" y1="6" x2="6.01" y2="6"/>
+                <line x1="6" y1="18" x2="6.01" y2="18"/>
+              </svg>
+              <span>Backend Services</span>
+            </div>
+            <div class="tech-tags-list">
+              <span class="tech-tag">Java 17</span>
+              <span class="tech-tag">Spring Boot 3.3.4</span>
+              <span class="tech-tag">Spring Security</span>
+              <span class="tech-tag">Spring Data JPA</span>
+              <span class="tech-tag">Apache PDFBox</span>
+            </div>
+            <p>
+              High-performance REST API with JWT security, baseline computation engines, and PDFBox document parsing.
+            </p>
+          </div>
+
+          <!-- Tech 3 -->
+          <div class="tech-card">
+            <div class="tech-card-header">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+              </svg>
+              <span>Database & Migration</span>
+            </div>
+            <div class="tech-tags-list">
+              <span class="tech-tag">MySQL 8.0</span>
+              <span class="tech-tag">H2 (In-Memory)</span>
+              <span class="tech-tag">Flyway</span>
+              <span class="tech-tag">Hibernate</span>
+            </div>
+            <p>
+              Relational schemas managed with Flyway versioned migrations (V1 to V4), supporting both production MySQL and test H2.
+            </p>
+          </div>
+
+          <!-- Tech 4 -->
+          <div class="tech-card">
+            <div class="tech-card-header">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+              </svg>
+              <span>AI & Grounding</span>
+            </div>
+            <div class="tech-tags-list">
+              <span class="tech-tag">NVIDIA Nemotron</span>
+              <span class="tech-tag">Nebius AI Studio</span>
+              <span class="tech-tag">Tavily Search API</span>
+              <span class="tech-tag">Offline Mocks</span>
+            </div>
+            <p>
+              Multi-agent reasoning with Nebius AI Studio and literature retrieval via Tavily, with automatic fallback to deterministic offline mocks.
+            </p>
+          </div>
+
+          <!-- Tech 5 -->
+          <div class="tech-card">
+            <div class="tech-card-header">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+              <span>Integrity & Privacy</span>
+            </div>
+            <div class="tech-tags-list">
+              <span class="tech-tag">SHA-256 Ledger</span>
+              <span class="tech-tag">Granular Consent</span>
+              <span class="tech-tag">Zero Client Secrets</span>
+              <span class="tech-tag">Emergency Triage</span>
+            </div>
+            <p>
+              Tamper-evident hash-chained audit trails, granular consent flags, and emergency cue detection directing to 911/112.
+            </p>
+          </div>
+
+          <!-- Tech 6 -->
+          <div class="tech-card">
+            <div class="tech-card-header">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+              </svg>
+              <span>OpenAPI & Testing</span>
+            </div>
+            <div class="tech-tags-list">
+              <span class="tech-tag">SpringDoc OpenAPI</span>
+              <span class="tech-tag">Swagger UI</span>
+              <span class="tech-tag">JUnit 5</span>
+              <span class="tech-tag">Flutter Test</span>
+            </div>
+            <p>
+              Full interactive API documentation with 86 passing backend automated tests and 15 Flutter unit/widget tests.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         Dedicated Safety & Disclaimer Section
+         ======================================================================= -->
+    <section class="safety-section" id="safety" aria-labelledby="safetyTitle">
+      <div class="container">
+        <div class="safety-card">
+          <div class="safety-header">
+            <div class="safety-icon-large">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+            </div>
+            <div>
+              <h2 class="safety-title" id="safetyTitle">Safety, Ethics & Medical Boundaries</h2>
+              <span style="font-size:0.875rem; color:var(--text-muted);">Responsible preventive technology with explicit clinical boundaries</span>
+            </div>
+          </div>
+
+          <div class="safety-quote">
+            "OS4All is an early-stage health technology project intended to support health awareness. It is not a medical device and does not replace professional medical advice, diagnosis, or treatment. Consult a qualified healthcare professional about medical concerns."
+          </div>
+
+          <div class="safety-points">
+            <div class="safety-point-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              <div>
+                <strong>Non-Diagnostic System:</strong> OS4All does not diagnose medical conditions, predict every disease, or prescribe therapeutic regimens.
+              </div>
+            </div>
+
+            <div class="safety-point-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+              <div>
+                <strong>Emergency Redirection:</strong> For acute symptoms such as severe chest pressure, sudden respiratory failure, or stroke signs, immediately contact emergency services (911 / 112).
+              </div>
+            </div>
+
+            <div class="safety-point-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0110 0v4"></path>
+              </svg>
+              <div>
+                <strong>Data Dignity & Privacy:</strong> Health observations and diagnostic records remain under user control with cryptographically auditable consent records.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         Explore OS4All / Access & Setup Section
+         ======================================================================= -->
+    <section class="explore-section" id="explore" aria-labelledby="exploreTitle">
+      <div class="container">
+        
+        <div class="section-header">
+          <span class="section-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+            Open Source Project
+          </span>
+          <h2 class="section-title" id="exploreTitle">Explore OS4All</h2>
+          <p class="section-subtitle">
+            The full codebase is publicly accessible on GitHub. Follow the verified setup guide below to build and run the system locally.
+          </p>
+        </div>
+
+        <!-- Repository Highlight Card -->
+        <div class="repo-card">
+          <div class="repo-info">
+            <h3 class="repo-title">
+              <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+              </svg>
+              github.com/The-kanak/OS4All
+            </h3>
+            <p class="repo-desc">
+              Explore the complete repository including Spring Boot backend, Flutter Android app, architecture specifications, and unit test suites.
+            </p>
+          </div>
+          <a href="https://github.com/The-kanak/OS4All" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+            Open Repository
+            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" aria-hidden="true">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
+            </svg>
+          </a>
+        </div>
+
+        <!-- Code Setup Tabs -->
+        <div class="code-tabs-container">
+          <div class="code-tabs-nav" role="tablist">
+            <button class="code-tab-btn active" data-tab="tabClone" role="tab" aria-selected="true">
+              <span>1. Clone & Prerequisites</span>
+            </button>
+            <button class="code-tab-btn" data-tab="tabBackend" role="tab" aria-selected="false">
+              <span>2. Run Backend (Spring Boot)</span>
+            </button>
+            <button class="code-tab-btn" data-tab="tabFrontend" role="tab" aria-selected="false">
+              <span>3. Run App (Flutter Android)</span>
+            </button>
+          </div>
+
+          <!-- Tab 1: Clone -->
+          <div class="code-tab-content active" id="tabClone" role="tabpanel">
+            <div class="code-block-header">
+              <span class="code-block-title">PowerShell / Terminal</span>
+              <button class="copy-btn" aria-label="Copy clone commands">
+                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"></path>
+                </svg>
+                Copy
+              </button>
+            </div>
+            <pre><code><span class="code-comment"># Prerequisites: JDK 17+, Maven 3.8+, Flutter SDK 3.47+, Git</span>
+<span class="code-cmd">git clone https://github.com/The-kanak/OS4All.git</span>
+<span class="code-cmd">cd OS4All</span>
+
+<span class="code-comment"># Copy template environment file (backend defaults to offline mock mode)</span>
+<span class="code-cmd">Copy-Item .env.example .env</span></code></pre>
+          </div>
+
+          <!-- Tab 2: Backend -->
+          <div class="code-tab-content" id="tabBackend" role="tabpanel">
+            <div class="code-block-header">
+              <span class="code-block-title">PowerShell / Backend Directory</span>
+              <button class="copy-btn" aria-label="Copy backend run commands">
+                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"></path>
+                </svg>
+                Copy
+              </button>
+            </div>
+            <pre><code><span class="code-cmd">cd OS4All\backend</span>
+
+<span class="code-comment"># Run 86 automated unit and integration tests</span>
+<span class="code-cmd">.\mvnw.cmd test</span>
+
+<span class="code-comment"># Start Spring Boot backend (serves on http://localhost:8085)</span>
+<span class="code-cmd">.\mvnw.cmd spring-boot:run</span>
+
+<span class="code-comment"># Health check: http://localhost:8085/actuator/health</span>
+<span class="code-comment"># Swagger UI:   http://localhost:8085/swagger-ui.html</span></code></pre>
+          </div>
+
+          <!-- Tab 3: Frontend -->
+          <div class="code-tab-content" id="tabFrontend" role="tabpanel">
+            <div class="code-block-header">
+              <span class="code-block-title">PowerShell / Frontend Directory</span>
+              <button class="copy-btn" aria-label="Copy frontend run commands">
+                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"></path>
+                </svg>
+                Copy
+              </button>
+            </div>
+            <pre><code><span class="code-cmd">cd OS4All\frontend</span>
+
+<span class="code-comment"># Fetch Flutter dependencies</span>
+<span class="code-cmd">flutter pub get</span>
+
+<span class="code-comment"># Run on connected Android device or emulator</span>
+<span class="code-cmd">flutter run -d android</span>
+
+<span class="code-comment"># Or build local Android APK binary from source:</span>
+<span class="code-cmd">flutter build apk --release</span></code></pre>
+          </div>
+        </div>
+
+        <!-- Honest Notice on APK Distribution -->
+        <div class="apk-notice">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          <div>
+            <strong>Build from Source Notice:</strong>
+            Pre-compiled binary releases (.apk) or Google Play Store listings are not currently hosted on GitHub Releases. The complete, unredacted open-source codebase is ready to build and run using Flutter SDK 3.47+ and JDK 17 as outlined in the setup steps above.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =========================================================================
+       Footer
+       ========================================================================= -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        
+        <div class="footer-brand-col">
+          <img src="assets/logo.svg" alt="OS4All Logo" class="footer-logo" width="160" height="38">
+          <p class="footer-tagline">
+            Your health, understood earlier. An open-source preventive health intelligence platform.
+          </p>
+          <div style="font-size:0.8125rem; color:var(--accent-teal); font-weight:600;">
+            Developed for the Seva Innovation Challenge
+          </div>
+        </div>
+
+        <div class="footer-links-col">
+          <div class="footer-links-title">Navigation</div>
+          <a href="#about" class="footer-link">About Project</a>
+          <a href="#features" class="footer-link">Features & Capabilities</a>
+          <a href="#how-it-works" class="footer-link">How It Works</a>
+          <a href="#preview" class="footer-link">Concept UI Preview</a>
+          <a href="#technology" class="footer-link">Technology Stack</a>
+          <a href="#safety" class="footer-link">Safety & Medical Notice</a>
+          <a href="#explore" class="footer-link">Explore & Setup</a>
+        </div>
+
+        <div class="footer-disclaimer-col">
+          <div class="footer-links-title">Health Disclaimer</div>
+          <p class="footer-disclaimer-text">
+            OS4All is an informational, non-diagnostic technology project designed to support health awareness. It does not replace medical advice, diagnosis, or clinical care. Always consult a qualified medical professional for health concerns.
+          </p>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          &copy; 2026 OS4All Project Contributors. Distributed under open-source licenses.
+        </div>
+        <div class="footer-seva-badge">
+          Seva Innovation Challenge Entry
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Vanilla JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html>

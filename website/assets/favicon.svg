@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="favGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f5d4"/>
+      <stop offset="50%" stop-color="#00bbf9"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0d1b3e"/>
+      <stop offset="100%" stop-color="#050a17"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#bgGrad)"/>
+  <rect x="1" y="1" width="62" height="62" rx="15" stroke="url(#favGrad)" stroke-width="1.5" stroke-opacity="0.4"/>
+  <!-- Pulse / Vitals Wave -->
+  <path d="M12 34 H22 L27 20 L34 46 L40 28 L44 36 L52 34" stroke="url(#favGrad)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Ambient glow nodes -->
+  <circle cx="27" cy="20" r="2.5" fill="#00f5d4"/>
+  <circle cx="34" cy="46" r="2.5" fill="#00bbf9"/>
+</svg>
